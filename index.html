@@ -4,33 +4,28 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Private Cloud Gallery</title>
-  <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
-  <!-- Firebase SDK -->
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-storage-compat.js"></script>
 </head>
 <body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col items-center justify-between font-sans antialiased">
 
-  <!-- MAIN CONTAINER -->
   <main class="w-full max-w-5xl px-4 py-8 flex-1 flex flex-col justify-center items-center">
 
-    <!-- 1. 로그인 화면 -->
-    <div id="login-view" class="w-full max-w-md bg-slate-900/90 border border-slate-800 rounded-3xl p-8 shadow-2xl backdrop-blur-md text-center">
+    <div id="login-view" class="w-full max-w-md bg-slate-900/90 border border-slate-800 rounded-3xl p-8 shadow-2xl text-center">
       <div class="w-16 h-16 bg-indigo-600/20 text-indigo-400 rounded-2xl flex items-center justify-center mx-auto mb-6 text-3xl shadow-inner">
         🔒
       </div>
       <h1 class="text-2xl font-bold mb-2 tracking-tight">프라이빗 갤러리</h1>
       <p class="text-slate-400 text-sm mb-8">초대받은 계정으로 로그인하여 미디어를 공유하세요.</p>
       
-      <button onclick="loginWithGoogle()" class="w-full bg-white hover:bg-slate-100 text-slate-900 font-semibold py-3.5 px-5 rounded-2xl shadow-lg flex items-center justify-center gap-3 transition active:scale-95">
+      <button id="login-btn" onclick="loginWithGoogle()" class="w-full bg-white hover:bg-slate-100 text-slate-900 font-semibold py-3.5 px-5 rounded-2xl shadow-lg flex items-center justify-center gap-3 transition active:scale-95">
         <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" class="w-5 h-5" alt="Google">
-        Google 계정 선택 및 로그인
+        <span id="login-btn-text">Google 계정 선택 및 로그인</span>
       </button>
     </div>
 
-    <!-- 2. 권한 없음 화면 -->
     <div id="denied-view" class="hidden w-full max-w-md bg-slate-900/90 border border-slate-800 rounded-3xl p-8 shadow-2xl text-center">
       <div class="w-16 h-16 bg-rose-500/20 text-rose-400 rounded-2xl flex items-center justify-center mx-auto mb-6 text-3xl">
         ⛔
@@ -42,10 +37,8 @@
       </button>
     </div>
 
-    <!-- 3. 메인 갤러리 화면 -->
     <div id="gallery-view" class="hidden w-full space-y-8">
       
-      <!-- 상단 헤더 -->
       <header class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-slate-900/60 border border-slate-800 p-5 rounded-2xl backdrop-blur-md">
         <div>
           <h1 class="text-xl font-bold flex items-center gap-2">
@@ -58,7 +51,6 @@
         </button>
       </header>
 
-      <!-- 미디어 업로드 영역 -->
       <section class="bg-slate-900/80 border border-slate-800 p-6 rounded-2xl shadow-xl space-y-4">
         <h2 class="text-sm font-semibold text-slate-300 flex items-center gap-2">
           <span>📤</span> 사진 및 동영상 업로드
@@ -73,10 +65,8 @@
         <p id="upload-status" class="text-xs text-indigo-400 font-mono mt-2 min-h-[1rem]"></p>
       </section>
 
-      <!-- 미디어 그리드 목록 -->
       <section>
         <div id="gallery-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          <!-- 스크립트로 미디어 카드가 여기에 삽입됩니다 -->
         </div>
       </section>
 
@@ -85,14 +75,14 @@
   </main>
 
   <script>
-    // 💡 [초대 계정 관리 슬롯 6개]
+    // 💡 초대받은 구글 이메일 주소 목록 (6개 슬롯)
     const ALLOWED_EMAILS = [
       "doyulnam11@gmail.com",
       "doyulnam1004@gmail.com",
-      "example3@gmail.com", // 필요 시 교체
-      "example4@gmail.com", // 필요 시 교체
-      "example5@gmail.com", // 필요 시 교체
-      "example6@gmail.com"  // 필요 시 교체
+      "example3@gmail.com",
+      "example4@gmail.com",
+      "example5@gmail.com",
+      "example6@gmail.com"
     ];
 
     // Firebase 설정
@@ -110,25 +100,27 @@
     const auth = firebase.auth();
     const storage = firebase.storage();
 
-    // 🔑 Google 계정 선택 창을 강제로 띄우는 로그인 함수
+    // 태블릿/모바일 전용 바로 이동(Redirect) 로그인 방식 적용
     function loginWithGoogle() {
-      const provider = new firebase.auth.GoogleAuthProvider();
-      provider.setCustomParameters({ prompt: 'select_account' }); // 계정 선택창 강제 표시
-
-      auth.signInWithPopup(provider).catch(error => {
-        if (error.code === 'auth/popup-blocked' || error.code === 'auth/popup-closed-by-user') {
-          auth.signInWithRedirect(provider);
-        } else {
-          alert("로그인 에러: " + error.message);
-        }
-      });
+      try {
+        const btnText = document.getElementById('login-btn-text');
+        if (btnText) btnText.innerText = "구글 로그인 페이지로 이동 중...";
+        
+        const provider = new firebase.auth.GoogleAuthProvider();
+        provider.setCustomParameters({ prompt: 'select_account' });
+        
+        // 팝업 블록 없는 페이지 직접 이동 방식
+        auth.signInWithRedirect(provider);
+      } catch (err) {
+        alert("로그인 실행 오류: " + err.message);
+      }
     }
 
     function logout() {
       auth.signOut().then(() => window.location.reload());
     }
 
-    // 📤 파일 업로드 함수
+    // 파일 업로드 함수
     async function uploadFile() {
       const fileInput = document.getElementById('file-input');
       const file = fileInput.files[0];
@@ -161,12 +153,12 @@
           uploadBtn.disabled = false;
           uploadBtn.classList.remove('opacity-50', 'cursor-not-allowed');
           setTimeout(() => { statusText.innerText = ''; }, 3000);
-          await loadGallery(); // 갤러리 새로고침
+          await loadGallery();
         }
       );
     }
 
-    // 🖼️ 갤러리 불러오기 함수
+    // 갤러리 불러오기 함수
     async function loadGallery() {
       const galleryGrid = document.getElementById('gallery-grid');
       galleryGrid.innerHTML = '<div class="col-span-full text-center text-slate-500 py-12">미디어 목록을 불러오는 중...</div>';
@@ -218,7 +210,14 @@
       }
     }
 
-    // 🔒 인증 상태 감지 및 화면 변경
+    // 로그인 후 페이지 돌아왔을 때 결과 감지
+    auth.getRedirectResult().catch(error => {
+      if (error && error.message) {
+        alert("로그인 처리 오류: " + error.message);
+      }
+    });
+
+    // 인증 상태 감지 및 화면 변경
     auth.onAuthStateChanged(async user => {
       const loginView = document.getElementById('login-view');
       const deniedView = document.getElementById('denied-view');
