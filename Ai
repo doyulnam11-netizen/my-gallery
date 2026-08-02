@@ -1,1 +1,58 @@
+// ai/ai-handler.js
 
+const GROQ_API_KEY = "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";
+const GROQ_API_URL = "https://api.groq.com/openai/v1/chat/completions";
+
+/**
+ * Groq AI 모델을 호출하여 텍스트 응답을 받아오는 함수
+ * @param {string} prompt - AI에게 보낼 요청 메시지
+ * @returns {Promise<string>} - AI의 답변 결과
+ */
+async function requestAI(prompt) {
+  try {
+    const response = await fetch(GROQ_API_URL, {
+      method: "POST",
+      headers: {
+        "Authorization": `Bearer ${GROQ_API_KEY}`,
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        model: "llama-3.3-70b-versatile",
+        messages: [
+          {
+            role: "system",
+            content: "당신은 프라이빗 갤러리의 친절하고 센스 있는 AI 매니저입니다. 사용자의 요청에 짧고 핵심만 담아 한국어로 답변해주세요."
+          },
+          {
+            role: "user",
+            content: prompt
+          }
+        ],
+        temperature: 0.7,
+        max_tokens: 300
+      })
+    });
+
+    if (!response.ok) {
+      throw new Error(`API 오류 발생: ${response.status}`);
+    }
+
+    const data = await response.json();
+    if (data.choices && data.choices.length > 0) {
+      return data.choices[0].message.content.trim();
+    }
+    return "AI로부터 유효한 응답을 받지 못했습니다.";
+  } catch (error) {
+    console.error("Groq API 통신 실패:", error);
+    return "AI 연결 중 오류가 발생했습니다.";
+  }
+}
+
+/**
+ * 등록된 미디어 제목을 기반으로 AI 추천 코멘트나 감상평을 생성하는 예시 함수
+ * @param {string} title - 미디어 제목
+ */
+async function generateMediaComment(title) {
+  const prompt = `다음 미디어 제목에 어울리는 센스 있고 재밌는 한 줄 코멘트나 감상평을 만들어줘: "${title}"`;
+  return await requestAI(prompt);
+}
