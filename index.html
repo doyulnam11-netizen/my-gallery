@@ -59,13 +59,17 @@
   </div>
 
   <script>
-    // 💡 [수정필수] 초대할 이메일 주소를 여기에 작성하세요!
+    // 💡 허용할 구글 이메일 주소 목록 (총 6개 슬롯)
     const ALLOWED_EMAILS = [
       "doyulnam11@gmail.com",
-      "doyulnam1004gmail.com"
+      "doyulnam1004@gmail.com", // 오타 수정 완료
+      "example3@gmail.com",      // 나중에 필요할 때 이메일 변경
+      "example4@gmail.com",      // 나중에 필요할 때 이메일 변경
+      "example5@gmail.com",      // 나중에 필요할 때 이메일 변경
+      "example6@gmail.com"       // 나중에 필요할 때 이메일 변경
     ];
 
-    // Firebase 설정값 (자동 채움 완료)
+    // Firebase 설정값
     const firebaseConfig = {
       apiKey: "AIzaSyAtSwOi26eXwrwnGia2b8-uFdLJlVAhRME",
       authDomain: "save-photos-persona.firebaseapp.com",
@@ -79,15 +83,30 @@
     firebase.initializeApp(firebaseConfig);
     const auth = firebase.auth();
 
+    // 리다이렉트 로그인 실패 감지
+    auth.getRedirectResult().catch(error => {
+      if (error && error.message) {
+        alert("로그인 오류: " + error.message);
+      }
+    });
+
+    // 구글 로그인 처리
     function loginWithGoogle() {
       const provider = new firebase.auth.GoogleAuthProvider();
-      auth.signInWithRedirect(provider);
+      auth.signInWithPopup(provider).catch(error => {
+        if (error.code === 'auth/popup-blocked' || error.code === 'auth/popup-closed-by-user') {
+          auth.signInWithRedirect(provider);
+        } else {
+          alert("로그인 오류: " + error.message + "\n(코드: " + error.code + ")");
+        }
+      });
     }
 
     function logout() {
       auth.signOut().then(() => window.location.reload());
     }
 
+    // 로그인 상태 감지
     auth.onAuthStateChanged(user => {
       const loginView = document.getElementById('login-view');
       const deniedView = document.getElementById('denied-view');
