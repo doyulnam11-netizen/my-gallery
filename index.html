@@ -84,7 +84,7 @@
               </div>
               <div id="detail-step1" class="hidden space-y-2 pl-2 border-l-2 border-indigo-500">
                 <p class="text-slate-400">유튜브 앱 하단 중앙의 플러스 버튼을 눌러 영상을 선택하고 업로드를 진행합니다.</p>
-                <img src="3538.jpg" onerror="handleImageError(this, ['3538.JPG', '3538.jpeg', '3538.png'])" alt="유튜브 플러스 버튼" class="rounded-lg max-w-sm border border-slate-800 shadow-md">
+                <img src="Screenshot_20260802_173603_YouTube.jpg" alt="유튜브 플러스 버튼" class="rounded-lg max-w-sm border border-slate-800 shadow-md">
               </div>
 
               <!-- 스텝 2 -->
@@ -95,8 +95,8 @@
               <div id="detail-step2" class="hidden space-y-3 pl-2 border-l-2 border-indigo-500">
                 <p class="text-slate-400">공개 상태 메뉴에 들어가서 '일부 공개'를 선택하여 링크가 있는 사람만 볼 수 있게 설정합니다.</p>
                 <div class="flex flex-wrap gap-2">
-                  <img src="3540.jpg" onerror="handleImageError(this, ['3540.JPG', '3540.jpeg', '3540.png'])" alt="공개상태 비공개 화면" class="rounded-lg max-w-xs border border-slate-800 shadow-md">
-                  <img src="3544.jpg" onerror="handleImageError(this, ['3544.JPG', '3544.jpeg', '3544.png'])" alt="일부 공개 선택 화면" class="rounded-lg max-w-xs border border-slate-800 shadow-md">
+                  <img src="Screenshot_20260802_173634_YouTube.jpg" alt="공개상태 비공개 화면" class="rounded-lg max-w-xs border border-slate-800 shadow-md">
+                  <img src="Screenshot_20260802_173657_YouTube.jpg" alt="일부 공개 선택 화면" class="rounded-lg max-w-xs border border-slate-800 shadow-md">
                 </div>
               </div>
 
@@ -108,8 +108,8 @@
               <div id="detail-step3" class="hidden space-y-3 pl-2 border-l-2 border-indigo-500">
                 <p class="text-slate-400">재생 화면에서 공유 버튼을 누르고 링크 복사를 선택한 뒤 웹사이트에 붙여넣습니다.</p>
                 <div class="flex flex-wrap gap-2">
-                  <img src="3546.jpg" onerror="handleImageError(this, ['3546.JPG', '3546.jpeg', '3546.png'])" alt="공유 버튼 위치" class="rounded-lg max-w-xs border border-slate-800 shadow-md">
-                  <img src="3548.jpg" onerror="handleImageError(this, ['3548.JPG', '3548.jpeg', '3548.png'])" alt="링크 복사 메뉴" class="rounded-lg max-w-xs border border-slate-800 shadow-md">
+                  <img src="Screenshot_20260802_174523_YouTube.jpg" alt="공유 버튼 위치" class="rounded-lg max-w-xs border border-slate-800 shadow-md">
+                  <img src="Screenshot_20260802_174535_YouTube.jpg" alt="링크 복사 메뉴" class="rounded-lg max-w-xs border border-slate-800 shadow-md">
                 </div>
               </div>
             </div>
@@ -202,19 +202,6 @@
     let currentFilter = 'all';
     let currentSort = 'latest';
     let allGuideExpanded = false;
-
-    // 이미지 로드 실패 시 다른 확장자(.JPG, .jpeg 등)로 자동 전환해 주는 함수
-    function handleImageError(img, alternatives) {
-      if (!img.dataset.tryIndex) {
-        img.dataset.tryIndex = 0;
-      } else {
-        img.dataset.tryIndex = parseInt(img.dataset.tryIndex) + 1;
-      }
-      
-      if (img.dataset.tryIndex < alternatives.length) {
-        img.src = alternatives[parseInt(img.dataset.tryIndex)];
-      }
-    }
 
     function loginWithGoogle() {
       const provider = new firebase.auth.GoogleAuthProvider();
@@ -437,4 +424,3 @@
   </script>
 </body>
 </html>
-
