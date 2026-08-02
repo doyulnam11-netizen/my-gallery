@@ -45,10 +45,53 @@
           </h1>
           <p id="user-info" class="text-xs text-indigo-400 mt-1 font-mono"></p>
         </div>
-        <button onclick="logout()" class="text-xs bg-slate-800 hover:bg-slate-700 text-slate-300 px-4 py-2.5 rounded-xl border border-slate-700 transition">
-          로그아웃
-        </button>
+        <div class="flex items-center gap-2">
+          <button onclick="toggleHelp()" class="text-xs bg-indigo-600/20 hover:bg-indigo-600/30 text-indigo-300 px-4 py-2.5 rounded-xl border border-indigo-500/30 transition font-medium">
+            ❓ 업로드 가이드 보기
+          </button>
+          <button onclick="logout()" class="text-xs bg-slate-800 hover:bg-slate-700 text-slate-300 px-4 py-2.5 rounded-xl border border-slate-700 transition">
+            로그아웃
+          </button>
+        </div>
       </header>
+
+      <!-- 업로드 가이드 박스 (토글 형태) -->
+      <div id="help-section" class="hidden bg-slate-900 border border-indigo-500/40 p-6 rounded-2xl shadow-xl space-y-6 text-sm text-slate-300">
+        <div class="flex justify-between items-center border-b border-slate-800 pb-3">
+          <h3 class="font-bold text-base text-indigo-400 flex items-center gap-2">
+            <span>💡</span> 미디어 업로드 및 공유 가이드
+          </h3>
+          <button onclick="toggleHelp()" class="text-slate-400 hover:text-white text-xs bg-slate-800 px-3 py-1 rounded-lg">닫기</button>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <!-- 유튜브 가이드 -->
+          <div class="bg-slate-950/60 p-4 rounded-xl border border-slate-800 space-y-2">
+            <h4 class="font-bold text-white flex items-center gap-1.5">
+              <span>🎥</span> 유튜브 영상 올리는 법 (일부 공개)
+            </h4>
+            <ol class="list-decimal list-inside space-y-1.5 text-slate-400 text-xs leading-relaxed">
+              <li>유튜브에 영상을 업로드합니다.</li>
+              <li>공개 범위를 <strong class="text-indigo-300">'일부 공개'</strong>로 설정합니다. (검색에 안 뜨고 링크로만 볼 수 있음)</li>
+              <li>영상의 <strong class="text-indigo-300">공유 링크(URL)</strong>를 복사합니다.</li>
+              <li>아래 입력 칸에 제목과 링크를 넣고 등록합니다.</li>
+            </ol>
+          </div>
+
+          <!-- Imgur 가이드 -->
+          <div class="bg-slate-950/60 p-4 rounded-xl border border-slate-800 space-y-2">
+            <h4 class="font-bold text-white flex items-center gap-1.5">
+              <span>🖼️</span> Imgur 사진 올리는 법 (숨김)
+            </h4>
+            <ol class="list-decimal list-inside space-y-1.5 text-slate-400 text-xs leading-relaxed">
+              <li>Imgur 앱이나 웹사이트(imgur.com)에 접속합니다.</li>
+              <li>사진을 업로드할 때 공개 설정을 <strong class="text-indigo-300">'Hidden(숨김)'</strong> 또는 비공개로 설정합니다.</li>
+              <li>업로드된 사진을 길게 누르거나 우클릭하여 <strong class="text-indigo-300">'이미지 주소 복사(Direct Link)'</strong>를 복사합니다. (주소가 .jpg나 .png로 끝나야 함)</li>
+              <li>아래 입력 칸에 제목과 링크를 넣고 등록합니다.</li>
+            </ol>
+          </div>
+        </div>
+      </div>
 
       <section class="bg-slate-900/80 border border-slate-800 p-6 rounded-2xl shadow-xl space-y-4">
         <h2 class="text-sm font-semibold text-slate-300 flex items-center gap-2">
@@ -76,9 +119,16 @@
   </main>
 
   <script>
+    // 승인된 계정 목록 (총 8개 칸)
     const ALLOWED_EMAILS = [
       "doyulnam11@gmail.com",
-      "doyulnam1004@gmail.com"
+      "doyulnam1004@gmail.com",
+      "추가할이메일주소_1@gmail.com",
+      "추가할이메일주소_2@gmail.com",
+      "추가할이메일주소_3@gmail.com",
+      "추가할이메일주소_4@gmail.com",
+      "추가할이메일주소_5@gmail.com",
+      "추가할이메일주소_6@gmail.com"
     ];
 
     const firebaseConfig = {
@@ -106,6 +156,11 @@
 
     function logout() {
       auth.signOut().then(() => window.location.reload());
+    }
+
+    function toggleHelp() {
+      const helpSection = document.getElementById('help-section');
+      helpSection.classList.toggle('hidden');
     }
 
     function getYouTubeEmbedUrl(url) {
@@ -145,6 +200,10 @@
       }
     }
 
+    function playVideo(element, embedUrl) {
+      element.innerHTML = `<iframe class="w-full h-full" src="${embedUrl}?autoplay=1" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>`;
+    }
+
     async function loadGallery() {
       const galleryGrid = document.getElementById('gallery-grid');
       galleryGrid.innerHTML = '<div class="col-span-full text-center text-slate-500 py-12">목록을 불러오는 중...</div>';
@@ -164,9 +223,13 @@
           card.className = "bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden shadow-lg hover:border-slate-700 transition";
 
           if (data.type === 'youtube') {
+            const videoId = data.url.split('/').pop();
             card.innerHTML = `
-              <div class="relative bg-black aspect-video flex items-center justify-center">
-                <iframe class="w-full h-full" src="${data.url}" frameborder="0" allowfullscreen></iframe>
+              <div class="relative bg-slate-950 aspect-video overflow-hidden cursor-pointer group" onclick="playVideo(this, '${data.url}')">
+                <img src="https://img.youtube.com/vi/${videoId}/hqdefault.jpg" alt="썸네일" class="w-full h-full object-cover group-hover:scale-105 transition duration-300">
+                <div class="absolute inset-0 flex items-center justify-center bg-black/40 group-hover:bg-black/25 transition">
+                  <div class="w-12 h-12 bg-rose-600 rounded-full flex items-center justify-center text-white shadow-lg text-lg pl-0.5">▶</div>
+                </div>
               </div>
               <div class="p-3 text-xs text-slate-300 font-medium truncate">
                 🎥 ${data.title}
@@ -215,4 +278,3 @@
   </script>
 </body>
 </html>
-
