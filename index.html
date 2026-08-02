@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>프라이빗 링크 갤러리</title>
   
-  <!-- [여기 추가됨!] 앱처럼 보이게 하는 PWA 및 주소창 숨김 설정 -->
+  <!-- PWA 및 주소창 숨김 설정 -->
   <link rel="manifest" href="manifest.json">
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -84,7 +84,6 @@
             </h4>
             
             <div class="space-y-3 text-xs text-slate-300">
-              <!-- 스텝 1 -->
               <div class="flex items-center justify-between bg-slate-900/80 p-2.5 rounded-lg border border-slate-800">
                 <span>1. 유튜브 하단의 [+] 버튼을 눌러 영상을 업로드합니다.</span>
                 <button onclick="toggleStep('step1')" class="bg-indigo-600/30 hover:bg-indigo-600/50 text-indigo-300 px-2 py-1 rounded border border-indigo-500/40 font-bold">i</button>
@@ -94,7 +93,6 @@
                 <img src="Screenshot_20260802_173603_YouTube.jpg" alt="유튜브 플러스 버튼" class="rounded-lg max-w-sm border border-slate-800 shadow-md">
               </div>
 
-              <!-- 스텝 2 -->
               <div class="flex items-center justify-between bg-slate-900/80 p-2.5 rounded-lg border border-slate-800">
                 <span>2. 세부정보 화면에서 공개 상태를 [일부 공개]로 설정합니다.</span>
                 <button onclick="toggleStep('step2')" class="bg-indigo-600/30 hover:bg-indigo-600/50 text-indigo-300 px-2 py-1 rounded border border-indigo-500/40 font-bold">i</button>
@@ -102,12 +100,11 @@
               <div id="detail-step2" class="hidden space-y-3 pl-2 border-l-2 border-indigo-500">
                 <p class="text-slate-400">공개 상태 메뉴에 들어가서 '일부 공개'를 선택하여 링크가 있는 사람만 볼 수 있게 설정합니다.</p>
                 <div class="flex flex-wrap gap-2">
-                  <img src="Screenshot_20260802_173634_YouTube.jpg" alt="공개상태 비공개 화면" class="rounded-lg max-w-xs border border-slate-800 shadow-md">
+                  <img src="Screenshot_20260802_173634_YouTube.jpg" alt="공개상태 화면" class="rounded-lg max-w-xs border border-slate-800 shadow-md">
                   <img src="Screenshot_20260802_173657_YouTube.jpg" alt="일부 공개 선택 화면" class="rounded-lg max-w-xs border border-slate-800 shadow-md">
                 </div>
               </div>
 
-              <!-- 스텝 3 -->
               <div class="flex items-center justify-between bg-slate-900/80 p-2.5 rounded-lg border border-slate-800">
                 <span>3. 업로드된 영상의 [공유] > [링크 복사]를 진행합니다.</span>
                 <button onclick="toggleStep('step3')" class="bg-indigo-600/30 hover:bg-indigo-600/50 text-indigo-300 px-2 py-1 rounded border border-indigo-500/40 font-bold">i</button>
@@ -194,6 +191,27 @@
 
   </main>
 
+  <!-- [추가됨] 사진 크게 보기 및 좌우 넘기기 모달창 -->
+  <div id="image-modal" class="hidden fixed inset-0 z-50 bg-black/95 flex flex-col items-center justify-center p-4">
+    <button onclick="closeModal()" class="absolute top-4 right-4 text-white bg-slate-800 hover:bg-slate-700 w-10 h-10 rounded-full flex items-center justify-center text-xl font-bold transition shadow-lg">✕</button>
+    
+    <div class="relative w-full max-w-4xl h-[75vh] flex items-center justify-center">
+      <!-- 이전 사진 버튼 -->
+      <button onclick="prevImage()" class="absolute left-2 sm:-left-12 z-10 bg-slate-800/80 hover:bg-slate-700 text-white w-12 h-12 rounded-full flex items-center justify-center text-2xl font-bold transition shadow-lg">‹</button>
+      
+      <!-- 확대된 이미지 -->
+      <img id="modal-image" src="" alt="확대 사진" class="max-w-full max-h-full object-contain rounded-xl shadow-2xl">
+      
+      <!-- 다음 사진 버튼 -->
+      <button onclick="nextImage()" class="absolute right-2 sm:-right-12 z-10 bg-slate-800/80 hover:bg-slate-700 text-white w-12 h-12 rounded-full flex items-center justify-center text-2xl font-bold transition shadow-lg">›</button>
+    </div>
+    
+    <div class="mt-4 text-center space-y-1">
+      <p id="modal-title" class="text-sm font-bold text-slate-200"></p>
+      <p id="modal-counter" class="text-xs text-indigo-400 font-mono"></p>
+    </div>
+  </div>
+
   <script>
     const ALLOWED_EMAILS = [
       "doyulnam11@gmail.com",
@@ -219,6 +237,10 @@
     let currentFilter = 'all';
     let currentSort = 'latest';
     let allGuideExpanded = false;
+
+    // 모달 관련 상태 변수
+    let imageList = [];
+    let currentImageIndex = 0;
 
     function loginWithGoogle() {
       const provider = new firebase.auth.GoogleAuthProvider();
@@ -255,6 +277,51 @@
         }
       });
     }
+
+    // --- [추가됨] 사진 크게 보기 및 슬라이드(넘기기) 기능 ---
+    function openModal(id) {
+      // 갤러리에 등록된 사진(image)들만 모아서 리스트 생성
+      imageList = allPosts.filter(item => item.type === 'image');
+      currentImageIndex = imageList.findIndex(item => item.id === id);
+      
+      if (currentImageIndex === -1) return;
+      
+      updateModalContent();
+      document.getElementById('image-modal').classList.remove('hidden');
+    }
+
+    function closeModal() {
+      document.getElementById('image-modal').classList.add('hidden');
+    }
+
+    function prevImage() {
+      if (imageList.length === 0) return;
+      currentImageIndex = (currentImageIndex - 1 + imageList.length) % imageList.length;
+      updateModalContent();
+    }
+
+    function nextImage() {
+      if (imageList.length === 0) return;
+      currentImageIndex = (currentImageIndex + 1) % imageList.length;
+      updateModalContent();
+    }
+
+    function updateModalContent() {
+      const item = imageList[currentImageIndex];
+      document.getElementById('modal-image').src = item.url;
+      document.getElementById('modal-title').innerText = item.title;
+      document.getElementById('modal-counter').innerText = `${currentImageIndex + 1} / ${imageList.length}`;
+    }
+
+    // 키보드 방향키(좌/우) 및 ESC 키 지원
+    window.addEventListener('keydown', (e) => {
+      const modal = document.getElementById('image-modal');
+      if (modal.classList.contains('hidden')) return;
+      
+      if (e.key === 'Escape') closeModal();
+      if (e.key === 'ArrowLeft') prevImage();
+      if (e.key === 'ArrowRight') nextImage();
+    });
 
     function getYouTubeEmbedUrl(url) {
       let regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
@@ -390,9 +457,13 @@
             </div>
           `;
         } else {
+          // [수정됨] 사진 클릭 시 openModal 실행되도록 설정 및 호버 효과 추가
           mediaHtml = `
-            <div class="relative bg-slate-950 aspect-square overflow-hidden">
-              <img src="${data.url}" alt="사진" class="w-full h-full object-cover hover:scale-105 transition duration-300" loading="lazy">
+            <div class="relative bg-slate-950 aspect-square overflow-hidden cursor-pointer group" onclick="openModal('${data.id}')">
+              <img src="${data.url}" alt="사진" class="w-full h-full object-cover group-hover:scale-105 transition duration-300" loading="lazy">
+              <div class="absolute inset-0 flex items-center justify-center bg-black/30 opacity-0 group-hover:opacity-100 transition duration-300">
+                <span class="bg-black/60 text-white text-xs px-3 py-1.5 rounded-full backdrop-blur-sm shadow-md font-medium">🔍 크게 보기</span>
+              </div>
             </div>
           `;
         }
@@ -441,4 +512,3 @@
   </script>
 </body>
 </html>
-
