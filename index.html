@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Private Gallery</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+</head>
+<body class="bg-slate-900 text-white min-h-screen flex flex-col justify-center items-center p-4">
+
+  <!-- 1. 로그인 화면 -->
+  <div id="login-view" class="text-center bg-slate-800 p-8 rounded-2xl shadow-xl max-w-md w-full">
+    <h1 class="text-2xl font-bold mb-2">🔒 프라이빗 갤러리</h1>
+    <p class="text-slate-400 text-sm mb-6">초대받은 이메일 계정으로 로그인해주세요.</p>
+    <button onclick="loginWithGoogle()" class="w-full bg-white text-slate-900 font-medium py-3 px-4 rounded-xl flex items-center justify-center gap-2 hover:bg-slate-100 transition">
+      <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" class="w-5 h-5" alt="Google Logo">
+      Google 계정으로 로그인
+    </button>
+  </div>
+
+  <!-- 2. 권한 없음 화면 -->
+  <div id="denied-view" class="hidden text-center bg-slate-800 p-8 rounded-2xl shadow-xl max-w-md w-full">
+    <div class="text-red-400 text-4xl mb-3">⛔</div>
+    <h2 class="text-xl font-bold mb-2">접근 권한이 없습니다</h2>
+    <p id="denied-email" class="text-slate-400 text-sm mb-6"></p>
+    <button onclick="logout()" class="bg-slate-700 hover:bg-slate-600 text-white py-2 px-6 rounded-lg text-sm transition">
+      다른 계정으로 로그인
+    </button>
+  </div>
+
+  <!-- 3. 미디어 갤러리 화면 -->
+  <div id="gallery-view" class="hidden w-full max-w-5xl">
+    <header class="flex justify-between items-center mb-8 border-b border-slate-800 pb-4">
+      <div>
+        <h1 class="text-2xl font-bold">📷 나만의 공간</h1>
+        <p id="user-info" class="text-slate-400 text-xs mt-1"></p>
+      </div>
+      <button onclick="logout()" class="bg-slate-800 hover:bg-slate-700 text-slate-300 py-2 px-4 rounded-lg text-sm transition">
+        로그아웃
+      </button>
+    </header>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <!-- 사진 카드 예시 -->
+      <div class="bg-slate-800 rounded-xl overflow-hidden shadow-lg border border-slate-700/50">
+        <img src="https://picsum.photos/600/400?random=1" class="w-full h-48 object-cover" alt="사진">
+        <div class="p-4"><p class="font-medium text-sm">추억 사진 1</p></div>
+      </div>
+      <!-- 동영상 카드 예시 -->
+      <div class="bg-slate-800 rounded-xl overflow-hidden shadow-lg border border-slate-700/50">
+        <video controls class="w-full h-48 object-cover">
+          <source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4">
+        </video>
+        <div class="p-4"><p class="font-medium text-sm">샘플 동영상 1</p></div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // 💡 [수정필수] 초대할 이메일 주소를 여기에 작성하세요!
+    const ALLOWED_EMAILS = [
+      "doyulnam11@gmail.com",
+      "doyulnam1004gmail.com"
+    ];
+
+    // Firebase 설정값 (자동 채움 완료)
+    const firebaseConfig = {
+      apiKey: "AIzaSyAtSwOi26eXwrwnGia2b8-uFdLJlVAhRME",
+      authDomain: "save-photos-persona.firebaseapp.com",
+      projectId: "save-photos-persona",
+      storageBucket: "save-photos-persona.firebasestorage.app",
+      messagingSenderId: "931044756030",
+      appId: "1:931044756030:web:571553771b34cd07955f6f",
+      measurementId: "G-LYJ6RZRETM"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+
+    function loginWithGoogle() {
+      const provider = new firebase.auth.GoogleAuthProvider();
+      auth.signInWithRedirect(provider);
+    }
+
+    function logout() {
+      auth.signOut().then(() => window.location.reload());
+    }
+
+    auth.onAuthStateChanged(user => {
+      const loginView = document.getElementById('login-view');
+      const deniedView = document.getElementById('denied-view');
+      const galleryView = document.getElementById('gallery-view');
+
+      if (user) {
+        loginView.classList.add('hidden');
+        if (ALLOWED_EMAILS.includes(user.email)) {
+          deniedView.classList.add('hidden');
+          galleryView.classList.remove('hidden');
+          document.getElementById('user-info').innerText = `${user.displayName} (${user.email})`;
+        } else {
+          galleryView.classList.add('hidden');
+          deniedView.classList.remove('hidden');
+          document.getElementById('denied-email').innerText = `접속한 계정: ${user.email}`;
+        }
+      } else {
+        loginView.classList.remove('hidden');
+        deniedView.classList.add('hidden');
+        galleryView.classList.add('hidden');
+      }
+    });
+  </script>
+</body>
+</html>
