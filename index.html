@@ -24,6 +24,7 @@
         <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" class="w-5 h-5" alt="Google">
         <span id="login-btn-text">Google 계정 선택 및 로그인</span>
       </button>
+      <p id="error-msg" class="text-xs text-rose-400 mt-4 min-h-[1rem] break-all"></p>
     </div>
 
     <div id="denied-view" class="hidden w-full max-w-md bg-slate-900/90 border border-slate-800 rounded-3xl p-8 shadow-2xl text-center">
@@ -75,7 +76,7 @@
   </main>
 
   <script>
-    // 💡 초대받은 구글 이메일 주소 목록 (6개 슬롯)
+    // 초대받은 이메일 목록
     const ALLOWED_EMAILS = [
       "doyulnam11@gmail.com",
       "doyulnam1004@gmail.com",
@@ -100,31 +101,46 @@
     const auth = firebase.auth();
     const storage = firebase.storage();
 
-    // 태블릿/모바일 전용 바로 이동(Redirect) 로그인 방식 적용
+    // 안전한 구글 로그인 로직
     function loginWithGoogle() {
-      try {
-        const btnText = document.getElementById('login-btn-text');
-        if (btnText) btnText.innerText = "구글 로그인 페이지로 이동 중...";
-        
-        const provider = new firebase.auth.GoogleAuthProvider();
-        provider.setCustomParameters({ prompt: 'select_account' });
-        
-        // 팝업 블록 없는 페이지 직접 이동 방식
-        auth.signInWithRedirect(provider);
-      } catch (err) {
-        alert("로그인 실행 오류: " + err.message);
-      }
+      const errorMsg = document.getElementById('error-msg');
+      const btnText = document.getElementById('login-btn-text');
+      errorMsg.innerText = '';
+      btnText.innerText = '로그인 진행 중...';
+
+      const provider = new firebase.auth.GoogleAuthProvider();
+      provider.setCustomParameters({ prompt: 'select_account' });
+
+      // 모바일/태블릿에서 팝업 차단 및 무한 로딩 방지
+      auth.signInWithPopup(provider)
+        .then(result => {
+          btnText.innerText = 'Google 계정 선택 및 로그인';
+        })
+        .catch(error => {
+          btnText.innerText = 'Google 계정 선택 및 로그인';
+          console.error(error);
+          
+          if (error.code === 'auth/unauthorized-domain') {
+            errorMsg.innerText = '⚠️ 파이어베이스 콘솔에 Vercel 도메인 추가가 필요합니다.';
+            alert('파이어베이스 콘솔(Authentication -> Settings -> Authorized domains)에 my-gallery-ecru-seven.vercel.app 주소를 등록해 주세요!');
+          } else if (error.code === 'auth/popup-blocked') {
+            // 팝업이 차단된 경우 페이지 직접 이동 방식으로 전환
+            auth.signInWithRedirect(provider);
+          } else if (error.code !== 'auth/popup-closed-by-user') {
+            errorMsg.innerText = '오류: ' + error.message;
+          }
+        });
     }
 
     function logout() {
       auth.signOut().then(() => window.location.reload());
     }
 
-    // 파일 업로드 함수
+    // 파일 업로드
     async function uploadFile() {
       const fileInput = document.getElementById('file-input');
       const file = fileInput.files[0];
-      if (!file) return alert('업로드할 사진이나 동영상을 먼저 선택해 주세요!');
+      if (!file) return alert('업로드할 미디어를 선택해 주세요!');
 
       const statusText = document.getElementById('upload-status');
       const uploadBtn = document.getElementById('upload-btn');
@@ -158,7 +174,7 @@
       );
     }
 
-    // 갤러리 불러오기 함수
+    // 갤러리 로딩
     async function loadGallery() {
       const galleryGrid = document.getElementById('gallery-grid');
       galleryGrid.innerHTML = '<div class="col-span-full text-center text-slate-500 py-12">미디어 목록을 불러오는 중...</div>';
@@ -168,7 +184,7 @@
         const res = await listRef.listAll();
 
         if (res.items.length === 0) {
-          galleryGrid.innerHTML = '<div class="col-span-full text-center text-slate-500 py-12">저장된 사진이나 동영상이 없습니다.<br>위에서 첫 미디어를 올리고 공유해 보세요!</div>';
+          galleryGrid.innerHTML = '<div class="col-span-full text-center text-slate-500 py-12">저장된 미디어가 없습니다. 위에서 올릴 수 있습니다.</div>';
           return;
         }
 
@@ -206,18 +222,11 @@
         }
       } catch (error) {
         console.error(error);
-        galleryGrid.innerHTML = `<div class="col-span-full text-center text-rose-400 py-12">갤러리를 불러오는 데 실패했습니다.<br><span class="text-xs text-slate-600">${error.message}</span></div>`;
+        galleryGrid.innerHTML = `<div class="col-span-full text-center text-rose-400 py-12">갤러리 로딩 실패<br><span class="text-xs text-slate-600">${error.message}</span></div>`;
       }
     }
 
-    // 로그인 후 페이지 돌아왔을 때 결과 감지
-    auth.getRedirectResult().catch(error => {
-      if (error && error.message) {
-        alert("로그인 처리 오류: " + error.message);
-      }
-    });
-
-    // 인증 상태 감지 및 화면 변경
+    // 로그인 상태 감지
     auth.onAuthStateChanged(async user => {
       const loginView = document.getElementById('login-view');
       const deniedView = document.getElementById('denied-view');
