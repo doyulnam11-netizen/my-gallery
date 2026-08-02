@@ -70,7 +70,7 @@
           </h3>
           <div class="flex items-center gap-2">
             <button onclick="toggleAllGuide()" class="text-xs bg-indigo-600 hover:bg-indigo-500 text-white px-3 py-1.5 rounded-lg transition font-medium">
-              📖 전체 상세 가이드 & 사진 한 번에 보기
+              📖 전체 상세 가이드 열기/닫기
             </button>
             <button onclick="toggleHelp()" class="text-slate-400 hover:text-white text-xs bg-slate-800 px-3 py-1.5 rounded-lg">닫기</button>
           </div>
@@ -119,19 +119,89 @@
             </div>
           </div>
 
-          <!-- Imgur 가이드 섹션 -->
+          <!-- Imgur 가이드 섹션 (14장 사진 바탕으로 세부 구현) -->
           <div class="bg-slate-950/60 p-4 rounded-xl border border-slate-800 space-y-3">
             <h4 class="font-bold text-white flex items-center gap-1.5 text-sm">
-              <span>🖼️</span> Imgur 사진 올리는 법 (숨김)
+              <span>🖼️</span> Imgur 사진 올리는 법 (숨김 / 직접 링크 복사)
             </h4>
             <div class="space-y-3 text-xs text-slate-300">
+              
+              <!-- 단계 1 -->
               <div class="flex items-center justify-between bg-slate-900/80 p-2.5 rounded-lg border border-slate-800">
-                <span>1. Imgur에 사진을 숨김(Hidden)으로 올리고 직접 링크(Direct Link)를 복사합니다.</span>
+                <span>1. 브라우저 메뉴(점 3개)를 눌러 [데스크톱 사이트]로 전환합니다.</span>
                 <button onclick="toggleStep('step4')" class="bg-indigo-600/30 hover:bg-indigo-600/50 text-indigo-300 px-2 py-1 rounded border border-indigo-500/40 font-bold">i</button>
               </div>
-              <div id="detail-step4" class="hidden space-y-2 pl-2 border-l-2 border-indigo-500">
-                <p class="text-slate-400">imgur.com에 사진을 올릴 때 공개 범위를 Hidden(숨김)으로 지정하고 이미지 주소(.jpg/.png)를 복사해 입력하세요.</p>
+              <div id="detail-step4" class="hidden space-y-3 pl-2 border-l-2 border-indigo-500">
+                <p class="text-slate-400">모바일 브라우저 우측 하단(또는 상단)의 메뉴(점 3개)를 누르고 [데스크톱 사이트]를 체크해 PC 화면으로 전환합니다.</p>
+                <div class="flex flex-wrap gap-2">
+                  <img src="2821.jpg" alt="메뉴 열기" class="rounded-lg max-w-xs border border-slate-800 shadow-md">
+                  <img src="2823.jpg" alt="하단 메뉴" class="rounded-lg max-w-xs border border-slate-800 shadow-md">
+                  <img src="2825.jpg" alt="데스크톱 사이트 체크" class="rounded-lg max-w-xs border border-slate-800 shadow-md">
+                </div>
               </div>
+
+              <!-- 단계 2 -->
+              <div class="flex items-center justify-between bg-slate-900/80 p-2.5 rounded-lg border border-slate-800">
+                <span>2. Imgur 사이트 우측 상단에서 구글 계정으로 로그인합니다.</span>
+                <button onclick="toggleStep('step5')" class="bg-indigo-600/30 hover:bg-indigo-600/50 text-indigo-300 px-2 py-1 rounded border border-indigo-500/40 font-bold">i</button>
+              </div>
+              <div id="detail-step5" class="hidden space-y-3 pl-2 border-l-2 border-indigo-500">
+                <p class="text-slate-400">imgur.com 접속 후 우측 상단의 프로필/로그인 버튼을 눌러 구글 계정으로 로그인을 진행합니다.</p>
+                <div class="flex flex-wrap gap-2">
+                  <img src="2827.jpg" alt="구글 계정 로그인" class="rounded-lg max-w-xs border border-slate-800 shadow-md">
+                  <img src="2829.jpg" alt="로그인 후 프로필 확인" class="rounded-lg max-w-xs border border-slate-800 shadow-md">
+                </div>
+              </div>
+
+              <!-- 단계 3 -->
+              <div class="flex items-center justify-between bg-slate-900/80 p-2.5 rounded-lg border border-slate-800">
+                <span>3. 상단 업로드 창에서 [Choose Photo/Video]를 눌러 사진을 선택합니다.</span>
+                <button onclick="toggleStep('step6')" class="bg-indigo-600/30 hover:bg-indigo-600/50 text-indigo-300 px-2 py-1 rounded border border-indigo-500/40 font-bold">i</button>
+              </div>
+              <div id="detail-step6" class="hidden space-y-3 pl-2 border-l-2 border-indigo-500">
+                <p class="text-slate-400">업로드 창이 뜨면 사진 선택 버튼을 누르고 스마트폰 갤러리에서 공유할 사진을 선택합니다.</p>
+                <div class="flex flex-wrap gap-2">
+                  <img src="2831.jpg" alt="Choose Photo" class="rounded-lg max-w-xs border border-slate-800 shadow-md">
+                  <img src="2835.jpg" alt="갤러리에서 사진 선택" class="rounded-lg max-w-xs border border-slate-800 shadow-md">
+                </div>
+              </div>
+
+              <!-- 단계 4 -->
+              <div class="flex items-center justify-between bg-slate-900/80 p-2.5 rounded-lg border border-slate-800">
+                <span>4. 업로드된 사진을 꾹 누르고 메뉴에서 [ 이미지 보기 ]를 선택합니다.</span>
+                <button onclick="toggleStep('step7')" class="bg-indigo-600/30 hover:bg-indigo-600/50 text-indigo-300 px-2 py-1 rounded border border-indigo-500/40 font-bold">i</button>
+              </div>
+              <div id="detail-step7" class="hidden space-y-2 pl-2 border-l-2 border-indigo-500">
+                <p class="text-slate-400">업로드된 사진을 손가락으로 꾹 누르면 나오는 팝업 메뉴에서 [ 이미지 보기 ]를 선택해 이미지 단독 화면으로 이동합니다.</p>
+                <img src="2839.jpg" alt="이미지 보기 선택" class="rounded-lg max-w-sm border border-slate-800 shadow-md">
+              </div>
+
+              <!-- 단계 5 -->
+              <div class="flex items-center justify-between bg-slate-900/80 p-2.5 rounded-lg border border-slate-800">
+                <span>5. 상단 주소창을 누르고 복사 버튼을 눌러 이미지 직접 링크를 복사합니다.</span>
+                <button onclick="toggleStep('step8')" class="bg-indigo-600/30 hover:bg-indigo-600/50 text-indigo-300 px-2 py-1 rounded border border-indigo-500/40 font-bold">i</button>
+              </div>
+              <div id="detail-step8" class="hidden space-y-3 pl-2 border-l-2 border-indigo-500">
+                <p class="text-slate-400">화면 위쪽 주소창을 클릭한 뒤 복사 아이콘을 눌러 .jpg/.png로 끝나는 주소를 클립보드에 복사합니다.</p>
+                <div class="flex flex-wrap gap-2">
+                  <img src="2841.jpg" alt="주소창 클릭" class="rounded-lg max-w-xs border border-slate-800 shadow-md">
+                  <img src="2843.jpg" alt="링크 복사" class="rounded-lg max-w-xs border border-slate-800 shadow-md">
+                </div>
+              </div>
+
+              <!-- 단계 6 -->
+              <div class="flex items-center justify-between bg-slate-900/80 p-2.5 rounded-lg border border-slate-800">
+                <span>6. 웹사이트에 제목과 복사한 링크를 붙여넣고 등록하기를 누릅니다.</span>
+                <button onclick="toggleStep('step9')" class="bg-indigo-600/30 hover:bg-indigo-600/50 text-indigo-300 px-2 py-1 rounded border border-indigo-500/40 font-bold">i</button>
+              </div>
+              <div id="detail-step9" class="hidden space-y-3 pl-2 border-l-2 border-indigo-500">
+                <p class="text-slate-400">프라이빗 갤러리 웹사이트로 돌아와 제목을 적고 복사한 Imgur 주소를 붙여넣은 뒤 등록 버튼을 누릅니다. (비공개 설정은 기본 상태 그대로 두시면 됩니다)</p>
+                <div class="flex flex-wrap gap-2">
+                  <img src="2847.jpg" alt="웹사이트에 붙여넣기" class="rounded-lg max-w-xs border border-slate-800 shadow-md">
+                  <img src="2849.jpg" alt="비공개 설정 유지" class="rounded-lg max-w-xs border border-slate-800 shadow-md">
+                </div>
+              </div>
+
             </div>
           </div>
 
@@ -191,7 +261,7 @@
 
   </main>
 
-  <!-- [추가됨] 사진 크게 보기 및 좌우 넘기기 모달창 -->
+  <!-- 사진 크게 보기 및 좌우 넘기기 모달창 -->
   <div id="image-modal" class="hidden fixed inset-0 z-50 bg-black/95 flex flex-col items-center justify-center p-4">
     <button onclick="closeModal()" class="absolute top-4 right-4 text-white bg-slate-800 hover:bg-slate-700 w-10 h-10 rounded-full flex items-center justify-center text-xl font-bold transition shadow-lg">✕</button>
     
@@ -268,7 +338,7 @@
 
     function toggleAllGuide() {
       allGuideExpanded = !allGuideExpanded;
-      ['step1', 'step2', 'step3', 'step4'].forEach(stepId => {
+      ['step1', 'step2', 'step3', 'step4', 'step5', 'step6', 'step7', 'step8', 'step9'].forEach(stepId => {
         const detail = document.getElementById(`detail-${stepId}`);
         if (allGuideExpanded) {
           detail.classList.remove('hidden');
@@ -278,9 +348,7 @@
       });
     }
 
-    // --- [추가됨] 사진 크게 보기 및 슬라이드(넘기기) 기능 ---
     function openModal(id) {
-      // 갤러리에 등록된 사진(image)들만 모아서 리스트 생성
       imageList = allPosts.filter(item => item.type === 'image');
       currentImageIndex = imageList.findIndex(item => item.id === id);
       
@@ -313,7 +381,6 @@
       document.getElementById('modal-counter').innerText = `${currentImageIndex + 1} / ${imageList.length}`;
     }
 
-    // 키보드 방향키(좌/우) 및 ESC 키 지원
     window.addEventListener('keydown', (e) => {
       const modal = document.getElementById('image-modal');
       if (modal.classList.contains('hidden')) return;
@@ -457,7 +524,6 @@
             </div>
           `;
         } else {
-          // [수정됨] 사진 클릭 시 openModal 실행되도록 설정 및 호버 효과 추가
           mediaHtml = `
             <div class="relative bg-slate-950 aspect-square overflow-hidden cursor-pointer group" onclick="openModal('${data.id}')">
               <img src="${data.url}" alt="사진" class="w-full h-full object-cover group-hover:scale-105 transition duration-300" loading="lazy">
