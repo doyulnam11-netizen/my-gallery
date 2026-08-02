@@ -406,7 +406,6 @@
 
       if (!title || !url) return alert('제목과 링크를 모두 입력해 주세요!');
 
-      // 업로드 시 Groq AI를 통해 자동으로 해시태그 생성 기능 연동
       try {
         const aiTag = await generateMediaComment(title);
         if (aiTag && !title.includes('#')) {
