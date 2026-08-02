@@ -3,16 +3,15 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Private Cloud Gallery</title>
+  <title>프라이빗 링크 갤러리</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-storage-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
 </head>
 <body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col items-center justify-between font-sans antialiased">
-
   <main class="w-full max-w-5xl px-4 py-8 flex-1 flex flex-col justify-center items-center">
-
+    
     <div id="login-view" class="w-full max-w-md bg-slate-900/90 border border-slate-800 rounded-3xl p-8 shadow-2xl text-center">
       <div class="w-16 h-16 bg-indigo-600/20 text-indigo-400 rounded-2xl flex items-center justify-center mx-auto mb-6 text-3xl shadow-inner">
         🔒
@@ -20,11 +19,10 @@
       <h1 class="text-2xl font-bold mb-2 tracking-tight">프라이빗 갤러리</h1>
       <p class="text-slate-400 text-sm mb-8">초대받은 계정으로 로그인하여 미디어를 공유하세요.</p>
       
-      <button id="login-btn" onclick="loginWithGoogle()" class="w-full bg-white hover:bg-slate-100 text-slate-900 font-semibold py-3.5 px-5 rounded-2xl shadow-lg flex items-center justify-center gap-3 transition active:scale-95">
+      <button onclick="loginWithGoogle()" class="w-full bg-white hover:bg-slate-100 text-slate-900 font-semibold py-3.5 px-5 rounded-2xl shadow-lg flex items-center justify-center gap-3 transition active:scale-95">
         <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" class="w-5 h-5" alt="Google">
-        <span id="login-btn-text">Google 계정 선택 및 로그인</span>
+        <span>Google 계정 선택 및 로그인</span>
       </button>
-      <p id="error-msg" class="text-xs text-rose-400 mt-4 min-h-[1rem] break-all"></p>
     </div>
 
     <div id="denied-view" class="hidden w-full max-w-md bg-slate-900/90 border border-slate-800 rounded-3xl p-8 shadow-2xl text-center">
@@ -54,16 +52,18 @@
 
       <section class="bg-slate-900/80 border border-slate-800 p-6 rounded-2xl shadow-xl space-y-4">
         <h2 class="text-sm font-semibold text-slate-300 flex items-center gap-2">
-          <span>📤</span> 사진 및 동영상 업로드
+          <span>🔗</span> 유튜브 또는 Imgur 링크 등록하기
         </h2>
         
-        <div class="flex flex-col sm:flex-row items-center gap-3">
-          <input type="file" id="file-input" accept="image/*,video/*" class="block w-full text-xs text-slate-400 file:mr-4 file:py-2.5 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-indigo-600 file:text-white hover:file:bg-indigo-500 cursor-pointer bg-slate-950 p-2 rounded-xl border border-slate-800">
-          <button id="upload-btn" onclick="uploadFile()" class="w-full sm:w-auto bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold px-6 py-3 rounded-xl transition whitespace-nowrap shadow-lg">
-            업로드하기
-          </button>
+        <div class="space-y-3">
+          <input type="text" id="media-title" placeholder="제목을 입력하세요" class="w-full bg-slate-950 border border-slate-800 text-sm rounded-xl p-3 text-white focus:outline-none focus:border-indigo-500">
+          <div class="flex flex-col sm:flex-row gap-3">
+            <input type="text" id="media-url" placeholder="유튜브 링크 또는 Imgur 이미지 직접 링크 주소 입력" class="w-full bg-slate-950 border border-slate-800 text-sm rounded-xl p-3 text-white focus:outline-none focus:border-indigo-500">
+            <button onclick="addMedia()" class="bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold px-6 py-3 rounded-xl transition whitespace-nowrap shadow-lg">
+              등록하기
+            </button>
+          </div>
         </div>
-        <p id="upload-status" class="text-xs text-indigo-400 font-mono mt-2 min-h-[1rem]"></p>
       </section>
 
       <section>
@@ -76,17 +76,11 @@
   </main>
 
   <script>
-    // 초대받은 이메일 목록
     const ALLOWED_EMAILS = [
       "doyulnam11@gmail.com",
-      "doyulnam1004@gmail.com",
-      "example3@gmail.com",
-      "example4@gmail.com",
-      "example5@gmail.com",
-      "example6@gmail.com"
+      "doyulnam1004@gmail.com"
     ];
 
-    // 전달해주신 진짜 API 키 적용 완료
     const firebaseConfig = {
       apiKey: "AIzaSyATswOi26eXwrwnGia2b8-uFdLJlVAhRME",
       authDomain: "save-photos-persona.firebaseapp.com",
@@ -98,124 +92,100 @@
 
     firebase.initializeApp(firebaseConfig);
     const auth = firebase.auth();
-    const storage = firebase.storage();
+    const db = firebase.firestore();
 
     function loginWithGoogle() {
-      const errorMsg = document.getElementById('error-msg');
-      const btnText = document.getElementById('login-btn-text');
-      errorMsg.innerText = '';
-      btnText.innerText = '로그인 진행 중...';
-
       const provider = new firebase.auth.GoogleAuthProvider();
       provider.setCustomParameters({ prompt: 'select_account' });
-
-      auth.signInWithPopup(provider)
-        .then(result => {
-          btnText.innerText = 'Google 계정 선택 및 로그인';
-        })
-        .catch(error => {
-          btnText.innerText = 'Google 계정 선택 및 로그인';
-          console.error(error);
-          
-          if (error.code === 'auth/unauthorized-domain') {
-            errorMsg.innerText = '⚠️ 파이어베이스 콘솔(Authentication -> Settings -> Authorized domains)에 도메인 등록이 필요합니다.';
-          } else if (error.code === 'auth/popup-blocked') {
-            auth.signInWithRedirect(provider);
-          } else if (error.code !== 'auth/popup-closed-by-user') {
-            errorMsg.innerText = '오류: ' + error.message;
-          }
-        });
+      auth.signInWithPopup(provider).catch(error => {
+        if (error.code === 'auth/popup-blocked') {
+          auth.signInWithRedirect(provider);
+        }
+      });
     }
 
     function logout() {
       auth.signOut().then(() => window.location.reload());
     }
 
-    async function uploadFile() {
-      const fileInput = document.getElementById('file-input');
-      const file = fileInput.files[0];
-      if (!file) return alert('업로드할 미디어를 선택해 주세요!');
+    function getYouTubeEmbedUrl(url) {
+      let regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
+      let match = url.match(regExp);
+      return (match && match[2].length === 11) ? 'https://www.youtube.com/embed/' + match[2] : null;
+    }
 
-      const statusText = document.getElementById('upload-status');
-      const uploadBtn = document.getElementById('upload-btn');
+    async function addMedia() {
+      const title = document.getElementById('media-title').value.trim();
+      const url = document.getElementById('media-url').value.trim();
 
-      uploadBtn.disabled = true;
-      uploadBtn.classList.add('opacity-50', 'cursor-not-allowed');
-      statusText.innerText = '업로드 시작 중...';
+      if (!title || !url) return alert('제목과 링크를 모두 입력해 주세요!');
 
-      const storageRef = storage.ref('gallery/' + Date.now() + '_' + file.name);
-      const uploadTask = storageRef.put(file);
+      let type = 'image';
+      let finalUrl = url;
 
-      uploadTask.on('state_changed', 
-        (snapshot) => {
-          const progress = Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100);
-          statusText.innerText = `업로드 진행 중: ${progress}%`;
-        }, 
-        (error) => {
-          alert('업로드 실패: ' + error.message);
-          statusText.innerText = '';
-          uploadBtn.disabled = false;
-          uploadBtn.classList.remove('opacity-50', 'cursor-not-allowed');
-        }, 
-        async () => {
-          statusText.innerText = '🎉 업로드 완료!';
-          fileInput.value = '';
-          uploadBtn.disabled = false;
-          uploadBtn.classList.remove('opacity-50', 'cursor-not-allowed');
-          setTimeout(() => { statusText.innerText = ''; }, 3000);
-          await loadGallery();
-        }
-      );
+      const ytEmbed = getYouTubeEmbedUrl(url);
+      if (ytEmbed) {
+        type = 'youtube';
+        finalUrl = ytEmbed;
+      }
+
+      try {
+        await db.collection('posts').add({
+          title: title,
+          url: finalUrl,
+          type: type,
+          createdAt: firebase.firestore.FieldValue.serverTimestamp()
+        });
+
+        document.getElementById('media-title').value = '';
+        document.getElementById('media-url').value = '';
+        loadGallery();
+      } catch (error) {
+        alert('등록 실패: ' + error.message);
+      }
     }
 
     async function loadGallery() {
       const galleryGrid = document.getElementById('gallery-grid');
-      galleryGrid.innerHTML = '<div class="col-span-full text-center text-slate-500 py-12">미디어 목록을 불러오는 중...</div>';
+      galleryGrid.innerHTML = '<div class="col-span-full text-center text-slate-500 py-12">목록을 불러오는 중...</div>';
 
       try {
-        const listRef = storage.ref('gallery');
-        const res = await listRef.listAll();
+        const snapshot = await db.collection('posts').orderBy('createdAt', 'desc').get();
 
-        if (res.items.length === 0) {
-          galleryGrid.innerHTML = '<div class="col-span-full text-center text-slate-500 py-12">저장된 미디어가 없습니다.</div>';
+        if (snapshot.empty) {
+          galleryGrid.innerHTML = '<div class="col-span-full text-center text-slate-500 py-12">등록된 미디어가 없습니다.</div>';
           return;
         }
 
         galleryGrid.innerHTML = '';
-        for (const itemRef of res.items) {
-          const url = await itemRef.getDownloadURL();
-          const metadata = await itemRef.getMetadata();
-          const isVideo = metadata.contentType && metadata.contentType.startsWith('video');
-
+        snapshot.forEach(doc => {
+          const data = doc.data();
           const card = document.createElement('div');
           card.className = "bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden shadow-lg hover:border-slate-700 transition";
 
-          if (isVideo) {
+          if (data.type === 'youtube') {
             card.innerHTML = `
               <div class="relative bg-black aspect-video flex items-center justify-center">
-                <video controls class="w-full h-full object-contain">
-                  <source src="${url}" type="${metadata.contentType || 'video/mp4'}">
-                </video>
+                <iframe class="w-full h-full" src="${data.url}" frameborder="0" allowfullscreen></iframe>
               </div>
-              <div class="p-3 text-xs text-slate-400 truncate flex items-center justify-between">
-                <span>🎥 ${itemRef.name.split('_').slice(1).join('_') || itemRef.name}</span>
+              <div class="p-3 text-xs text-slate-300 font-medium truncate">
+                🎥 ${data.title}
               </div>
             `;
           } else {
             card.innerHTML = `
               <div class="relative bg-slate-950 aspect-square overflow-hidden">
-                <img src="${url}" alt="사진" class="w-full h-full object-cover hover:scale-105 transition duration-300" loading="lazy">
+                <img src="${data.url}" alt="사진" class="w-full h-full object-cover hover:scale-105 transition duration-300" loading="lazy">
               </div>
-              <div class="p-3 text-xs text-slate-400 truncate flex items-center justify-between">
-                <span>🖼️ ${itemRef.name.split('_').slice(1).join('_') || itemRef.name}</span>
+              <div class="p-3 text-xs text-slate-300 font-medium truncate">
+                🖼️ ${data.title}
               </div>
             `;
           }
           galleryGrid.appendChild(card);
-        }
+        });
       } catch (error) {
-        console.error(error);
-        galleryGrid.innerHTML = `<div class="col-span-full text-center text-rose-400 py-12">갤러리 로딩 실패<br><span class="text-xs text-slate-600">${error.message}</span></div>`;
+        galleryGrid.innerHTML = `<div class="col-span-full text-center text-rose-400 py-12">로딩 실패</div>`;
       }
     }
 
@@ -245,3 +215,4 @@
   </script>
 </body>
 </html>
+
