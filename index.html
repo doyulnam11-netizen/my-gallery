@@ -134,18 +134,28 @@
         </div>
       </div>
 
-      <!-- 영상, 사진 업로드 섹션 -->
+      <!-- 업로드 입력 섹션 (유튜브/Imgur 바로가기 버튼 추가) -->
       <section class="bg-slate-900/80 border border-slate-800 p-6 rounded-2xl shadow-xl space-y-4">
-        <h2 class="text-sm font-semibold text-slate-300 flex items-center gap-2">
-          <span>📤</span> 영상, 사진 업로드 하기 (유튜브 링크 / Imgur 링크)
-        </h2>
+        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 border-b border-slate-800 pb-3">
+          <h2 class="text-sm font-bold text-slate-200 flex items-center gap-2">
+            <span>✨</span> 영상, 사진 업로드 하기
+          </h2>
+          <div class="flex items-center gap-2">
+            <a href="https://www.youtube.com" target="_blank" class="text-xs bg-rose-600/20 hover:bg-rose-600/30 text-rose-300 border border-rose-500/30 px-3 py-1.5 rounded-xl transition flex items-center gap-1.5 font-medium">
+              <span>🎥</span> 유튜브 바로가기
+            </a>
+            <a href="https://imgur.com" target="_blank" class="text-xs bg-emerald-600/20 hover:bg-emerald-600/30 text-emerald-300 border border-emerald-500/30 px-3 py-1.5 rounded-xl transition flex items-center gap-1.5 font-medium">
+              <span>🖼️</span> Imgur 바로가기
+            </a>
+          </div>
+        </div>
         
-        <div class="space-y-3">
+        <div class="space-y-3 pt-1">
           <input type="text" id="media-title" placeholder="제목을 입력하세요" class="w-full bg-slate-950 border border-slate-800 text-sm rounded-xl p-3 text-white focus:outline-none focus:border-indigo-500">
           <div class="flex flex-col sm:flex-row gap-3">
-            <input type="text" id="media-url" placeholder="유튜브 링크 또는 Imgur 링크 주소 입력" class="w-full bg-slate-950 border border-slate-800 text-sm rounded-xl p-3 text-white focus:outline-none focus:border-indigo-500">
+            <input type="text" id="media-url" placeholder="유튜브 링크 또는 Imgur 이미지 직접 링크 주소 입력" class="w-full bg-slate-950 border border-slate-800 text-sm rounded-xl p-3 text-white focus:outline-none focus:border-indigo-500">
             <button onclick="addMedia()" class="bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold px-6 py-3 rounded-xl transition whitespace-nowrap shadow-lg">
-              업로드 하기
+              등록하기
             </button>
           </div>
         </div>
@@ -424,4 +434,3 @@
   </script>
 </body>
 </html>
-
