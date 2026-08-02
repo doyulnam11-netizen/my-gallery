@@ -20,10 +20,9 @@
 <body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col items-center justify-between font-sans antialiased">
   <main class="w-full max-w-5xl px-4 py-8 flex-1 flex flex-col justify-center items-center">
     
+    <!-- 로그인 뷰 -->
     <div id="login-view" class="w-full max-w-md bg-slate-900/90 border border-slate-800 rounded-3xl p-8 shadow-2xl text-center">
-      <div class="w-16 h-16 bg-indigo-600/20 text-indigo-400 rounded-2xl flex items-center justify-center mx-auto mb-6 text-3xl shadow-inner">
-        🔒
-      </div>
+      <div class="w-16 h-16 bg-indigo-600/20 text-indigo-400 rounded-2xl flex items-center justify-center mx-auto mb-6 text-3xl shadow-inner">🔒</div>
       <h1 class="text-2xl font-bold mb-2 tracking-tight">프라이빗 갤러리</h1>
       <p class="text-slate-400 text-sm mb-8">초대받은 계정으로 로그인하여 미디어를 공유하세요.</p>
       
@@ -33,17 +32,15 @@
       </button>
     </div>
 
+    <!-- 권한 없음 뷰 -->
     <div id="denied-view" class="hidden w-full max-w-md bg-slate-900/90 border border-slate-800 rounded-3xl p-8 shadow-2xl text-center">
-      <div class="w-16 h-16 bg-rose-500/20 text-rose-400 rounded-2xl flex items-center justify-center mx-auto mb-6 text-3xl">
-        ⛔
-      </div>
+      <div class="w-16 h-16 bg-rose-500/20 text-rose-400 rounded-2xl flex items-center justify-center mx-auto mb-6 text-3xl">⛔</div>
       <h2 class="text-xl font-bold mb-2">접근 권한이 없습니다</h2>
       <p id="denied-email" class="text-slate-400 text-sm mb-6 break-all"></p>
-      <button onclick="logout()" class="w-full bg-slate-800 hover:bg-slate-700 text-white font-medium py-3 px-5 rounded-xl transition">
-        다른 계정으로 로그인
-      </button>
+      <button onclick="logout()" class="w-full bg-slate-800 hover:bg-slate-700 text-white font-medium py-3 px-5 rounded-xl transition">다른 계정으로 로그인</button>
     </div>
 
+    <!-- 메인 갤러리 뷰 -->
     <div id="gallery-view" class="hidden w-full space-y-8">
       
       <header class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-slate-900/60 border border-slate-800 p-5 rounded-2xl backdrop-blur-md">
@@ -54,12 +51,8 @@
           <p id="user-info" class="text-xs text-indigo-400 mt-1 font-mono"></p>
         </div>
         <div class="flex items-center gap-2">
-          <button onclick="toggleHelp()" class="text-xs bg-indigo-600/20 hover:bg-indigo-600/30 text-indigo-300 px-4 py-2.5 rounded-xl border border-indigo-500/30 transition font-medium">
-            ❓ 업로드 가이드 보기
-          </button>
-          <button onclick="logout()" class="text-xs bg-slate-800 hover:bg-slate-700 text-slate-300 px-4 py-2.5 rounded-xl border border-slate-700 transition">
-            로그아웃
-          </button>
+          <button onclick="toggleHelp()" class="text-xs bg-indigo-600/20 hover:bg-indigo-600/30 text-indigo-300 px-4 py-2.5 rounded-xl border border-indigo-500/30 transition font-medium">❓ 업로드 가이드 보기</button>
+          <button onclick="logout()" class="text-xs bg-slate-800 hover:bg-slate-700 text-slate-300 px-4 py-2.5 rounded-xl border border-slate-700 transition">로그아웃</button>
         </div>
       </header>
 
@@ -70,9 +63,7 @@
             <span>💡</span> 미디어 업로드 및 공유 가이드
           </h3>
           <div class="flex items-center gap-2">
-            <button onclick="toggleAllGuide()" class="text-xs bg-indigo-600 hover:bg-indigo-500 text-white px-3 py-1.5 rounded-lg transition font-medium">
-              📖 전체 상세 가이드 열기/닫기
-            </button>
+            <button onclick="toggleAllGuide()" class="text-xs bg-indigo-600 hover:bg-indigo-500 text-white px-3 py-1.5 rounded-lg transition font-medium">📖 전체 상세 가이드 열기/닫기</button>
             <button onclick="toggleHelp()" class="text-slate-400 hover:text-white text-xs bg-slate-800 px-3 py-1.5 rounded-lg">닫기</button>
           </div>
         </div>
@@ -80,160 +71,105 @@
         <div class="space-y-4">
           <!-- 유튜브 가이드 섹션 -->
           <div class="bg-slate-950/60 p-4 rounded-xl border border-slate-800 space-y-3">
-            <h4 class="font-bold text-white flex items-center gap-1.5 text-sm">
-              <span>🎥</span> 유튜브 영상 및 쇼츠 올리는 법 (일부 공개)
-            </h4>
-            
+            <h4 class="font-bold text-white flex items-center gap-1.5 text-sm"><span>🎥</span> 유튜브 영상 올리는 법 (일부 공개)</h4>
             <div class="space-y-3 text-xs text-slate-300">
               <div class="flex items-center justify-between bg-slate-900/80 p-2.5 rounded-lg border border-slate-800">
                 <span>1. 유튜브 하단의 [+] 버튼을 눌러 영상을 업로드합니다.</span>
-                <button onclick="toggleStep('step1')" class="bg-indigo-600/30 hover:bg-indigo-600/50 text-indigo-300 px-2 py-1 rounded border border-indigo-500/40 font-bold">i</button>
+                <button onclick="toggleStep('step1')" class="bg-indigo-600/30 text-indigo-300 px-2 py-1 rounded font-bold">i</button>
               </div>
-              <div id="detail-step1" class="hidden space-y-2 pl-2 border-l-2 border-indigo-500">
-                <img src="Screenshot_20260802_173603_YouTube.jpg" onerror="this.src='Screenshot_20260802_173603.jpg'" alt="유튜브 플러스" class="rounded-lg w-48 object-cover border border-slate-800 shadow-md">
+              <div id="detail-step1" class="hidden pl-2 border-l-2 border-indigo-500">
+                <img src="Screenshot_20260802_173603_YouTube.jpg" onerror="this.src='Screenshot_20260802_173603.jpg'" class="rounded-lg w-48 border border-slate-800">
               </div>
 
               <div class="flex items-center justify-between bg-slate-900/80 p-2.5 rounded-lg border border-slate-800">
                 <span>2. 공개 상태를 [일부 공개]로 설정합니다.</span>
-                <button onclick="toggleStep('step2')" class="bg-indigo-600/30 hover:bg-indigo-600/50 text-indigo-300 px-2 py-1 rounded border border-indigo-500/40 font-bold">i</button>
+                <button onclick="toggleStep('step2')" class="bg-indigo-600/30 text-indigo-300 px-2 py-1 rounded font-bold">i</button>
               </div>
-              <div id="detail-step2" class="hidden space-y-3 pl-2 border-l-2 border-indigo-500">
-                <div class="flex flex-wrap gap-3">
-                  <img src="Screenshot_20260802_173634_YouTube.jpg" onerror="this.src='Screenshot_20260802_173634.jpg'" alt="공개상태" class="rounded-lg w-48 object-cover border border-slate-800 shadow-md">
-                  <img src="Screenshot_20260802_173657_YouTube.jpg" onerror="this.src='Screenshot_20260802_173657.jpg'" alt="일부공개" class="rounded-lg w-48 object-cover border border-slate-800 shadow-md">
-                </div>
+              <div id="detail-step2" class="hidden pl-2 border-l-2 border-indigo-500">
+                <img src="Screenshot_20260802_173657_YouTube.jpg" onerror="this.src='Screenshot_20260802_173657.jpg'" class="rounded-lg w-48 border border-slate-800">
               </div>
 
               <div class="flex items-center justify-between bg-slate-900/80 p-2.5 rounded-lg border border-slate-800">
                 <span>3. [공유] > [링크 복사]를 진행합니다.</span>
-                <button onclick="toggleStep('step3')" class="bg-indigo-600/30 hover:bg-indigo-600/50 text-indigo-300 px-2 py-1 rounded border border-indigo-500/40 font-bold">i</button>
+                <button onclick="toggleStep('step3')" class="bg-indigo-600/30 text-indigo-300 px-2 py-1 rounded font-bold">i</button>
               </div>
-              <div id="detail-step3" class="hidden space-y-3 pl-2 border-l-2 border-indigo-500">
-                <div class="flex flex-wrap gap-3">
-                  <img src="Screenshot_20260802_174523_YouTube.jpg" onerror="this.src='Screenshot_20260802_174523.jpg'" alt="공유" class="rounded-lg w-48 object-cover border border-slate-800 shadow-md">
-                  <img src="Screenshot_20260802_174535_YouTube.jpg" onerror="this.src='Screenshot_20260802_174535.jpg'" alt="링크복사" class="rounded-lg w-48 object-cover border border-slate-800 shadow-md">
-                </div>
+              <div id="detail-step3" class="hidden pl-2 border-l-2 border-indigo-500">
+                <img src="Screenshot_20260802_174535_YouTube.jpg" onerror="this.src='Screenshot_20260802_174535.jpg'" class="rounded-lg w-48 border border-slate-800">
               </div>
             </div>
           </div>
 
-          <!-- Imgur 가이드 섹션 -->
+          <!-- Imgur 가이드 섹션 (요청하신 파일명 완벽 반영) -->
           <div class="bg-slate-950/60 p-4 rounded-xl border border-slate-800 space-y-3">
-            <h4 class="font-bold text-white flex items-center gap-1.5 text-sm">
-              <span>🖼️</span> Imgur 사진 올리는 법 (Groq AI 자동 태그 연동)
-            </h4>
+            <h4 class="font-bold text-white flex items-center gap-1.5 text-sm"><span>🖼️</span> Imgur 사진 올리는 법</h4>
             <div class="space-y-3 text-xs text-slate-300">
               
+              <!-- 1번 이미지 -->
               <div class="flex items-center justify-between bg-slate-900/80 p-2.5 rounded-lg border border-slate-800">
-                <span>1. 카카오톡 등에서 링크를 엽니다.</span>
+                <span>1. [Imgur 바로가기] 버튼을 누릅니다.</span>
                 <button onclick="toggleStep('step4')" class="bg-indigo-600/30 hover:bg-indigo-600/50 text-indigo-300 px-2 py-1 rounded font-bold">i</button>
               </div>
               <div id="detail-step4" class="hidden pl-2 border-l-2 border-indigo-500">
-                <img src="Screenshot_20260802_201610_카카오톡.jpg" onerror="this.src='Screenshot_20260802_201610.jpg'" alt="단계1" class="rounded-lg w-48 border border-slate-800">
+                <img src="2817_2.jpg" alt="1번 사진" class="rounded-lg w-full max-w-[16rem] border border-slate-800">
               </div>
 
+              <!-- 2번 이미지 -->
               <div class="flex items-center justify-between bg-slate-900/80 p-2.5 rounded-lg border border-slate-800">
-                <span>2. 하단 메뉴 버튼을 누릅니다.</span>
+                <span>2. 우측 하단 점 3개 메뉴 > [다른 브라우저로 열기] 선택</span>
                 <button onclick="toggleStep('step5')" class="bg-indigo-600/30 hover:bg-indigo-600/50 text-indigo-300 px-2 py-1 rounded font-bold">i</button>
               </div>
               <div id="detail-step5" class="hidden pl-2 border-l-2 border-indigo-500">
-                <img src="Screenshot_20260802_201631_카카오톡.jpg" onerror="this.src='Screenshot_20260802_201631.jpg'" alt="단계2" class="rounded-lg w-48 border border-slate-800">
+                <img src="2821_2.jpg" alt="2번 사진" class="rounded-lg w-full max-w-[16rem] border border-slate-800">
               </div>
 
+              <!-- 나머지 중간 과정들 (기존 유지) -->
               <div class="flex items-center justify-between bg-slate-900/80 p-2.5 rounded-lg border border-slate-800">
-                <span>3. [다른 브라우저로 열기] 선택</span>
-                <button onclick="toggleStep('step6')" class="bg-indigo-600/30 hover:bg-indigo-600/50 text-indigo-300 px-2 py-1 rounded font-bold">i</button>
-              </div>
-              <div id="detail-step6" class="hidden pl-2 border-l-2 border-indigo-500">
-                <img src="Screenshot_20260802_201711_Samsung Browser.jpg" onerror="this.src='Screenshot_20260802_201711.jpg'" alt="단계3" class="rounded-lg w-48 border border-slate-800">
-              </div>
-
-              <div class="flex items-center justify-between bg-slate-900/80 p-2.5 rounded-lg border border-slate-800">
-                <span>4. 삼성 브라우저 창 열림</span>
-                <button onclick="toggleStep('step7')" class="bg-indigo-600/30 hover:bg-indigo-600/50 text-indigo-300 px-2 py-1 rounded font-bold">i</button>
+                <span>3. 삼성 브라우저 창 열림</span>
+                <button onclick="toggleStep('step7')" class="bg-indigo-600/30 text-indigo-300 px-2 py-1 rounded font-bold">i</button>
               </div>
               <div id="detail-step7" class="hidden pl-2 border-l-2 border-indigo-500">
-                <img src="Screenshot_20260802_201717_Samsung Browser.jpg" onerror="this.src='Screenshot_20260802_201717.jpg'" alt="단계4" class="rounded-lg w-48 border border-slate-800">
+                <img src="Screenshot_20260802_201717_Samsung Browser.jpg" onerror="this.src='Screenshot_20260802_201717.jpg'" class="rounded-lg w-48 border border-slate-800">
               </div>
 
               <div class="flex items-center justify-between bg-slate-900/80 p-2.5 rounded-lg border border-slate-800">
-                <span>5. [데스크톱 사이트] 체크</span>
-                <button onclick="toggleStep('step8')" class="bg-indigo-600/30 hover:bg-indigo-600/50 text-indigo-300 px-2 py-1 rounded font-bold">i</button>
+                <span>4. [데스크톱 사이트] 체크</span>
+                <button onclick="toggleStep('step8')" class="bg-indigo-600/30 text-indigo-300 px-2 py-1 rounded font-bold">i</button>
               </div>
               <div id="detail-step8" class="hidden pl-2 border-l-2 border-indigo-500">
-                <img src="Screenshot_20260802_201730_Samsung Browser.jpg" onerror="this.src='Screenshot_20260802_201730.jpg'" alt="단계5" class="rounded-lg w-48 border border-slate-800">
+                <img src="Screenshot_20260802_201730_Samsung Browser.jpg" onerror="this.src='Screenshot_20260802_201730.jpg'" class="rounded-lg w-48 border border-slate-800">
               </div>
 
               <div class="flex items-center justify-between bg-slate-900/80 p-2.5 rounded-lg border border-slate-800">
-                <span>6. Imgur 구글 로그인</span>
-                <button onclick="toggleStep('step9')" class="bg-indigo-600/30 hover:bg-indigo-600/50 text-indigo-300 px-2 py-1 rounded font-bold">i</button>
-              </div>
-              <div id="detail-step9" class="hidden pl-2 border-l-2 border-indigo-500">
-                <img src="Screenshot_20260802_201801_Samsung Browser.jpg" onerror="this.src='Screenshot_20260802_201801.jpg'" alt="단계6" class="rounded-lg w-48 border border-slate-800">
-              </div>
-
-              <div class="flex items-center justify-between bg-slate-900/80 p-2.5 rounded-lg border border-slate-800">
-                <span>7. 업로드 페이지 이동</span>
-                <button onclick="toggleStep('step10')" class="bg-indigo-600/30 hover:bg-indigo-600/50 text-indigo-300 px-2 py-1 rounded font-bold">i</button>
-              </div>
-              <div id="detail-step10" class="hidden pl-2 border-l-2 border-indigo-500">
-                <img src="Screenshot_20260802_201811_Samsung Browser.jpg" onerror="this.src='Screenshot_20260802_201811.jpg'" alt="단계7" class="rounded-lg w-48 border border-slate-800">
-              </div>
-
-              <div class="flex items-center justify-between bg-slate-900/80 p-2.5 rounded-lg border border-slate-800">
-                <span>8. [Choose Photo/Video] 선택</span>
-                <button onclick="toggleStep('step11')" class="bg-indigo-600/30 hover:bg-indigo-600/50 text-indigo-300 px-2 py-1 rounded font-bold">i</button>
+                <span>5. [Choose Photo/Video] 선택 후 파일 선택</span>
+                <button onclick="toggleStep('step11')" class="bg-indigo-600/30 text-indigo-300 px-2 py-1 rounded font-bold">i</button>
               </div>
               <div id="detail-step11" class="hidden pl-2 border-l-2 border-indigo-500">
-                <img src="Screenshot_20260802_201834_IntentResolver.jpg" onerror="this.src='Screenshot_20260802_201834.jpg'" alt="단계8" class="rounded-lg w-48 border border-slate-800">
+                <img src="Screenshot_20260802_201834_IntentResolver.jpg" onerror="this.src='Screenshot_20260802_201834.jpg'" class="rounded-lg w-48 border border-slate-800">
               </div>
 
               <div class="flex items-center justify-between bg-slate-900/80 p-2.5 rounded-lg border border-slate-800">
-                <span>9. [파일] 선택</span>
-                <button onclick="toggleStep('step12')" class="bg-indigo-600/30 hover:bg-indigo-600/50 text-indigo-300 px-2 py-1 rounded font-bold">i</button>
-              </div>
-              <div id="detail-step12" class="hidden pl-2 border-l-2 border-indigo-500">
-                <img src="Screenshot_20260802_201844_Files.jpg" onerror="this.src='Screenshot_20260802_201844.jpg'" alt="단계9" class="rounded-lg w-48 border border-slate-800">
-              </div>
-
-              <div class="flex items-center justify-between bg-slate-900/80 p-2.5 rounded-lg border border-slate-800">
-                <span>10. 업로드할 사진 선택</span>
-                <button onclick="toggleStep('step13')" class="bg-indigo-600/30 hover:bg-indigo-600/50 text-indigo-300 px-2 py-1 rounded font-bold">i</button>
-              </div>
-              <div id="detail-step13" class="hidden pl-2 border-l-2 border-indigo-500">
-                <img src="Screenshot_20260802_201916_Samsung Browser.jpg" onerror="this.src='Screenshot_20260802_201916.jpg'" alt="단계10" class="rounded-lg w-48 border border-slate-800">
-              </div>
-
-              <div class="flex items-center justify-between bg-slate-900/80 p-2.5 rounded-lg border border-slate-800">
-                <span>11. 비공개 설정 유지</span>
-                <button onclick="toggleStep('step14')" class="bg-indigo-600/30 hover:bg-indigo-600/50 text-indigo-300 px-2 py-1 rounded font-bold">i</button>
+                <span>6. 비공개 설정 유지</span>
+                <button onclick="toggleStep('step14')" class="bg-indigo-600/30 text-indigo-300 px-2 py-1 rounded font-bold">i</button>
               </div>
               <div id="detail-step14" class="hidden pl-2 border-l-2 border-indigo-500">
-                <img src="Screenshot_20260802_201926_Samsung Browser.jpg" onerror="this.src='Screenshot_20260802_201926.jpg'" alt="단계11" class="rounded-lg w-48 border border-slate-800">
+                <img src="Screenshot_20260802_201926_Samsung Browser.jpg" onerror="this.src='Screenshot_20260802_201926.jpg'" class="rounded-lg w-48 border border-slate-800">
               </div>
 
               <div class="flex items-center justify-between bg-slate-900/80 p-2.5 rounded-lg border border-slate-800">
-                <span>12. 사진 꾹 누르고 [이미지 보기]</span>
-                <button onclick="toggleStep('step15')" class="bg-indigo-600/30 hover:bg-indigo-600/50 text-indigo-300 px-2 py-1 rounded font-bold">i</button>
+                <span>7. 사진 꾹 누르고 [이미지 보기] 후 주소 복사</span>
+                <button onclick="toggleStep('step15')" class="bg-indigo-600/30 text-indigo-300 px-2 py-1 rounded font-bold">i</button>
               </div>
               <div id="detail-step15" class="hidden pl-2 border-l-2 border-indigo-500">
-                <img src="Screenshot_20260802_201939_Samsung Browser.jpg" onerror="this.src='Screenshot_20260802_201939.jpg'" alt="단계12" class="rounded-lg w-48 border border-slate-800">
+                <img src="Screenshot_20260802_201939_Samsung Browser.jpg" onerror="this.src='Screenshot_20260802_201939.jpg'" class="rounded-lg w-48 border border-slate-800">
               </div>
 
+              <!-- 14번 이미지 (요청하신 파일명) -->
               <div class="flex items-center justify-between bg-slate-900/80 p-2.5 rounded-lg border border-slate-800">
-                <span>13. 주소 복사</span>
-                <button onclick="toggleStep('step16')" class="bg-indigo-600/30 hover:bg-indigo-600/50 text-indigo-300 px-2 py-1 rounded font-bold">i</button>
-              </div>
-              <div id="detail-step16" class="hidden pl-2 border-l-2 border-indigo-500">
-                <img src="Screenshot_20260802_201946_Samsung Browser.jpg" onerror="this.src='Screenshot_20260802_201946.jpg'" alt="단계13" class="rounded-lg w-48 border border-slate-800">
-              </div>
-
-              <div class="flex items-center justify-between bg-slate-900/80 p-2.5 rounded-lg border border-slate-800">
-                <span>14. 웹사이트에 링크 붙여넣고 등록</span>
+                <span>14. 복사한 링크를 붙여넣고 [등록하기]를 누릅니다.</span>
                 <button onclick="toggleStep('step17')" class="bg-indigo-600/30 hover:bg-indigo-600/50 text-indigo-300 px-2 py-1 rounded font-bold">i</button>
               </div>
               <div id="detail-step17" class="hidden pl-2 border-l-2 border-indigo-500">
-                <img src="Screenshot_20260802_202016_카카오톡.jpg" onerror="this.src='Screenshot_20260802_202016.jpg'" alt="단계14" class="rounded-lg w-48 border border-slate-800">
+                <img src="2847_2.jpg" alt="14번 사진" class="rounded-lg w-full max-w-[16rem] border border-slate-800">
               </div>
 
             </div>
@@ -242,24 +178,27 @@
         </div>
       </div>
 
-      <!-- 업로드 입력 섹션 (Groq AI 자동 태그 연동) -->
+      <!-- 업로드 입력 섹션 (스크린샷 디자인 적용) -->
       <section class="bg-slate-900/80 border border-slate-800 p-6 rounded-2xl shadow-xl space-y-4">
-        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 border-b border-slate-800 pb-3">
-          <h2 class="text-sm font-bold text-slate-200 flex items-center gap-2">
-            <span>✨</span> 영상, 사진 업로드 하기 (AI 자동 해시태그 분석)
+        <div class="flex flex-col gap-4">
+          <h2 class="text-lg font-bold text-slate-200 flex items-center gap-2">
+            <span>✨</span> 영상, 사진 업로드 하기
           </h2>
-          <div class="flex items-center gap-2">
-            <a href="https://www.youtube.com" target="_blank" class="text-xs bg-rose-600/20 text-rose-300 border border-rose-500/30 px-3 py-1.5 rounded-xl font-medium">🎥 유튜브</a>
-            <a href="https://imgur.com" target="_blank" class="text-xs bg-emerald-600/20 text-emerald-300 border border-emerald-500/30 px-3 py-1.5 rounded-xl font-medium">🖼️ Imgur</a>
+          
+          <div class="flex items-center gap-3">
+            <a href="https://www.youtube.com" target="_blank" class="flex-1 flex items-center justify-center gap-2 text-sm bg-rose-950 text-rose-200 border border-rose-900 px-4 py-3 rounded-xl font-medium transition hover:bg-rose-900">
+              🎥 유튜브 바로가기
+            </a>
+            <a href="https://imgur.com" target="_blank" class="flex-1 flex items-center justify-center gap-2 text-sm bg-emerald-950 text-emerald-200 border border-emerald-900 px-4 py-3 rounded-xl font-medium transition hover:bg-emerald-900">
+              🖼️ Imgur 바로가기
+            </a>
           </div>
-        </div>
-        
-        <div class="space-y-3 pt-1">
-          <input type="text" id="media-title" placeholder="제목을 입력하세요 (AI가 제목을 분석해 태그를 만들어줍니다)" class="w-full bg-slate-950 border border-slate-800 text-sm rounded-xl p-3 text-white focus:outline-none focus:border-indigo-500">
-          <div class="flex flex-col sm:flex-row gap-3">
-            <input type="text" id="media-url" placeholder="유튜브 링크 또는 Imgur 이미지 링크 주소 입력" class="w-full bg-slate-950 border border-slate-800 text-sm rounded-xl p-3 text-white focus:outline-none focus:border-indigo-500">
-            <button onclick="addMedia()" class="bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold px-6 py-3 rounded-xl transition whitespace-nowrap shadow-lg">
-              AI 분석 후 등록
+          
+          <div class="space-y-3 pt-2">
+            <input type="text" id="media-title" placeholder="제목을 입력하세요" class="w-full bg-[#0f172a] border border-slate-800 text-sm rounded-xl p-4 text-white focus:outline-none focus:border-indigo-500">
+            <input type="text" id="media-url" placeholder="https://i.imgur.com/..." class="w-full bg-[#0f172a] border border-slate-800 text-sm rounded-xl p-4 text-white focus:outline-none focus:border-indigo-500">
+            <button onclick="addMedia()" class="w-full bg-[#5b58f5] hover:bg-[#4f4cee] text-white text-[15px] font-bold px-6 py-4 rounded-xl transition shadow-lg mt-2">
+              등록하기
             </button>
           </div>
         </div>
@@ -283,8 +222,7 @@
 
       <!-- 미디어 갤러리 그리드 -->
       <section>
-        <div id="gallery-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        </div>
+        <div id="gallery-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"></div>
       </section>
 
     </div>
