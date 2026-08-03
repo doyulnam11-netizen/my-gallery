@@ -20,7 +20,6 @@
 <body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col items-center justify-between font-sans antialiased">
   <main class="w-full max-w-5xl px-4 py-8 flex-1 flex flex-col justify-center items-center">
     
-    <!-- 로그인 뷰 -->
     <div id="login-view" class="w-full max-w-md bg-slate-900/90 border border-slate-800 rounded-3xl p-8 shadow-2xl text-center">
       <div class="w-16 h-16 bg-indigo-600/20 text-indigo-400 rounded-2xl flex items-center justify-center mx-auto mb-6 text-3xl shadow-inner">🔒</div>
       <h1 class="text-2xl font-bold mb-2 tracking-tight">프라이빗 갤러리</h1>
@@ -32,7 +31,6 @@
       </button>
     </div>
 
-    <!-- 권한 없음 뷰 -->
     <div id="denied-view" class="hidden w-full max-w-md bg-slate-900/90 border border-slate-800 rounded-3xl p-8 shadow-2xl text-center">
       <div class="w-16 h-16 bg-rose-500/20 text-rose-400 rounded-2xl flex items-center justify-center mx-auto mb-6 text-3xl">⛔</div>
       <h2 class="text-xl font-bold mb-2">접근 권한이 없습니다</h2>
@@ -40,7 +38,6 @@
       <button onclick="logout()" class="w-full bg-slate-800 hover:bg-slate-700 text-white font-medium py-3 px-5 rounded-xl transition">다른 계정으로 로그인</button>
     </div>
 
-    <!-- 메인 갤러리 뷰 -->
     <div id="gallery-view" class="hidden w-full space-y-8">
       
       <header class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-slate-900/60 border border-slate-800 p-5 rounded-2xl backdrop-blur-md">
@@ -56,120 +53,155 @@
         </div>
       </header>
 
-      <!-- 업로드 가이드 박스 -->
       <div id="help-section" class="hidden bg-slate-900 border border-indigo-500/40 p-6 rounded-2xl shadow-xl space-y-6 text-sm text-slate-300">
         <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center border-b border-slate-800 pb-3 gap-3">
           <h3 class="font-bold text-base text-indigo-400 flex items-center gap-2">
             <span>💡</span> 미디어 업로드 및 공유 가이드
           </h3>
           <div class="flex items-center gap-2">
-            <button onclick="toggleAllGuide()" class="text-xs bg-indigo-600 hover:bg-indigo-500 text-white px-3 py-1.5 rounded-lg transition font-medium">📖 전체 상세 가이드 열기/닫기</button>
+            <button onclick="toggleAllGuide()" class="text-xs bg-indigo-600 hover:bg-indigo-500 text-white px-3 py-1.5 rounded-lg transition font-medium">📖 전체 펼치기/접기</button>
             <button onclick="toggleHelp()" class="text-slate-400 hover:text-white text-xs bg-slate-800 px-3 py-1.5 rounded-lg">닫기</button>
           </div>
         </div>
 
         <div class="space-y-4">
-          <!-- 유튜브 가이드 섹션 -->
           <div class="bg-slate-950/60 p-4 rounded-xl border border-slate-800 space-y-3">
             <h4 class="font-bold text-white flex items-center gap-1.5 text-sm"><span>🎥</span> 유튜브 영상 올리는 법 (일부 공개)</h4>
             <div class="space-y-3 text-xs text-slate-300">
-              <div class="flex items-center justify-between bg-slate-900/80 p-2.5 rounded-lg border border-slate-800">
-                <span>1. 유튜브 하단의 [+] 버튼을 눌러 영상을 업로드합니다.</span>
-                <button onclick="toggleStep('step1')" class="bg-indigo-600/30 text-indigo-300 px-2 py-1 rounded font-bold">i</button>
-              </div>
-              <div id="detail-step1" class="hidden pl-2 border-l-2 border-indigo-500">
-                <img src="Screenshot_20260802_173603_YouTube.jpg" onerror="this.src='Screenshot_20260802_173603.jpg'" class="rounded-lg w-48 border border-slate-800">
-              </div>
-
-              <div class="flex items-center justify-between bg-slate-900/80 p-2.5 rounded-lg border border-slate-800">
-                <span>2. 공개 상태를 [일부 공개]로 설정합니다.</span>
-                <button onclick="toggleStep('step2')" class="bg-indigo-600/30 text-indigo-300 px-2 py-1 rounded font-bold">i</button>
-              </div>
-              <div id="detail-step2" class="hidden pl-2 border-l-2 border-indigo-500">
-                <img src="Screenshot_20260802_173657_YouTube.jpg" onerror="this.src='Screenshot_20260802_173657.jpg'" class="rounded-lg w-48 border border-slate-800">
+              <div class="flex flex-col bg-slate-900/80 p-3 rounded-xl border border-slate-800">
+                <div class="flex items-center justify-between">
+                  <span class="font-medium text-slate-200">1. 유튜브 하단의 [+] 버튼을 눌러 영상을 업로드합니다.</span>
+                  <button onclick="toggleStep('step1')" class="bg-indigo-600/30 hover:bg-indigo-600/50 text-indigo-300 px-3 py-1.5 rounded-lg font-bold transition ml-2">i</button>
+                </div>
+                <div id="detail-step1" class="hidden mt-3 pt-3 border-t border-slate-800/50">
+                  <img src="Screenshot_20260802_173603_YouTube.jpg" onerror="this.src='Screenshot_20260802_173603.jpg'" class="rounded-lg w-48 border border-slate-800">
+                </div>
               </div>
 
-              <div class="flex items-center justify-between bg-slate-900/80 p-2.5 rounded-lg border border-slate-800">
-                <span>3. [공유] > [링크 복사]를 진행합니다.</span>
-                <button onclick="toggleStep('step3')" class="bg-indigo-600/30 text-indigo-300 px-2 py-1 rounded font-bold">i</button>
+              <div class="flex flex-col bg-slate-900/80 p-3 rounded-xl border border-slate-800">
+                <div class="flex items-center justify-between">
+                  <span class="font-medium text-slate-200">2. 공개 상태를 [일부 공개]로 설정합니다.</span>
+                  <button onclick="toggleStep('step2')" class="bg-indigo-600/30 hover:bg-indigo-600/50 text-indigo-300 px-3 py-1.5 rounded-lg font-bold transition ml-2">i</button>
+                </div>
+                <div id="detail-step2" class="hidden mt-3 pt-3 border-t border-slate-800/50 flex gap-3">
+                  <img src="Screenshot_20260802_173634_YouTube.jpg" onerror="this.src='Screenshot_20260802_173634.jpg'" class="rounded-lg w-40 border border-slate-800">
+                  <img src="Screenshot_20260802_173657_YouTube.jpg" onerror="this.src='Screenshot_20260802_173657.jpg'" class="rounded-lg w-40 border border-slate-800">
+                </div>
               </div>
-              <div id="detail-step3" class="hidden pl-2 border-l-2 border-indigo-500">
-                <img src="Screenshot_20260802_174535_YouTube.jpg" onerror="this.src='Screenshot_20260802_174535.jpg'" class="rounded-lg w-48 border border-slate-800">
+
+              <div class="flex flex-col bg-slate-900/80 p-3 rounded-xl border border-slate-800">
+                <div class="flex items-center justify-between">
+                  <span class="font-medium text-slate-200">3. [공유] > [링크 복사]를 진행합니다.</span>
+                  <button onclick="toggleStep('step3')" class="bg-indigo-600/30 hover:bg-indigo-600/50 text-indigo-300 px-3 py-1.5 rounded-lg font-bold transition ml-2">i</button>
+                </div>
+                <div id="detail-step3" class="hidden mt-3 pt-3 border-t border-slate-800/50 flex gap-3">
+                  <img src="Screenshot_20260802_174523_YouTube.jpg" onerror="this.src='Screenshot_20260802_174523.jpg'" class="rounded-lg w-40 border border-slate-800">
+                  <img src="Screenshot_20260802_174535_YouTube.jpg" onerror="this.src='Screenshot_20260802_174535.jpg'" class="rounded-lg w-40 border border-slate-800">
+                </div>
               </div>
             </div>
           </div>
 
-          <!-- Imgur 가이드 섹션 (요청하신 파일명 완벽 반영) -->
           <div class="bg-slate-950/60 p-4 rounded-xl border border-slate-800 space-y-3">
-            <h4 class="font-bold text-white flex items-center gap-1.5 text-sm"><span>🖼️</span> Imgur 사진 올리는 법</h4>
+            <h4 class="font-bold text-white flex items-center gap-1.5 text-sm"><span>🖼️</span> Imgur 사진 올리는 법 (Groq AI 자동 태그 연동)</h4>
             <div class="space-y-3 text-xs text-slate-300">
               
-              <!-- 1번 이미지 -->
-              <div class="flex items-center justify-between bg-slate-900/80 p-2.5 rounded-lg border border-slate-800">
-                <span>1. [Imgur 바로가기] 버튼을 누릅니다.</span>
-                <button onclick="toggleStep('step4')" class="bg-indigo-600/30 hover:bg-indigo-600/50 text-indigo-300 px-2 py-1 rounded font-bold">i</button>
-              </div>
-              <div id="detail-step4" class="hidden pl-2 border-l-2 border-indigo-500">
-                <img src="2817_2.jpg" alt="1번 사진" class="rounded-lg w-full max-w-[16rem] border border-slate-800">
-              </div>
-
-              <!-- 2번 이미지 -->
-              <div class="flex items-center justify-between bg-slate-900/80 p-2.5 rounded-lg border border-slate-800">
-                <span>2. 우측 하단 점 3개 메뉴 > [다른 브라우저로 열기] 선택</span>
-                <button onclick="toggleStep('step5')" class="bg-indigo-600/30 hover:bg-indigo-600/50 text-indigo-300 px-2 py-1 rounded font-bold">i</button>
-              </div>
-              <div id="detail-step5" class="hidden pl-2 border-l-2 border-indigo-500">
-                <img src="2821_2.jpg" alt="2번 사진" class="rounded-lg w-full max-w-[16rem] border border-slate-800">
+              <div class="flex flex-col bg-slate-900/80 p-3 rounded-xl border border-slate-800">
+                <div class="flex items-center justify-between">
+                  <span class="font-medium text-slate-200">1. Imgur 사이트 접속 후 브라우저 메뉴 열기</span>
+                  <button onclick="toggleStep('step4')" class="bg-indigo-600/30 hover:bg-indigo-600/50 text-indigo-300 px-3 py-1.5 rounded-lg font-bold transition ml-2 flex-shrink-0">i</button>
+                </div>
+                <div id="detail-step4" class="hidden mt-3 pt-3 border-t border-slate-800/50 space-y-3">
+                  <p class="text-slate-400">등록창의 [Imgur 바로가기]를 누른 후, 우측 하단의 점 3개(메뉴) 버튼을 터치합니다.</p>
+                  <div class="grid grid-cols-2 gap-3">
+                    <img src="3603.jpg" alt="사진1" class="rounded-lg w-full h-auto object-contain border border-slate-800 bg-black/30">
+                    <img src="3605.jpg" alt="사진2" class="rounded-lg w-full h-auto object-contain border border-slate-800 bg-black/30">
+                  </div>
+                </div>
               </div>
 
-              <!-- 나머지 중간 과정들 (기존 유지) -->
-              <div class="flex items-center justify-between bg-slate-900/80 p-2.5 rounded-lg border border-slate-800">
-                <span>3. 삼성 브라우저 창 열림</span>
-                <button onclick="toggleStep('step7')" class="bg-indigo-600/30 text-indigo-300 px-2 py-1 rounded font-bold">i</button>
-              </div>
-              <div id="detail-step7" class="hidden pl-2 border-l-2 border-indigo-500">
-                <img src="Screenshot_20260802_201717_Samsung Browser.jpg" onerror="this.src='Screenshot_20260802_201717.jpg'" class="rounded-lg w-48 border border-slate-800">
-              </div>
-
-              <div class="flex items-center justify-between bg-slate-900/80 p-2.5 rounded-lg border border-slate-800">
-                <span>4. [데스크톱 사이트] 체크</span>
-                <button onclick="toggleStep('step8')" class="bg-indigo-600/30 text-indigo-300 px-2 py-1 rounded font-bold">i</button>
-              </div>
-              <div id="detail-step8" class="hidden pl-2 border-l-2 border-indigo-500">
-                <img src="Screenshot_20260802_201730_Samsung Browser.jpg" onerror="this.src='Screenshot_20260802_201730.jpg'" class="rounded-lg w-48 border border-slate-800">
+              <div class="flex flex-col bg-slate-900/80 p-3 rounded-xl border border-slate-800">
+                <div class="flex items-center justify-between">
+                  <span class="font-medium text-slate-200">2. 다른 브라우저로 열고 데스크톱 모드 체크</span>
+                  <button onclick="toggleStep('step5')" class="bg-indigo-600/30 hover:bg-indigo-600/50 text-indigo-300 px-3 py-1.5 rounded-lg font-bold transition ml-2 flex-shrink-0">i</button>
+                </div>
+                <div id="detail-step5" class="hidden mt-3 pt-3 border-t border-slate-800/50 space-y-3">
+                  <p class="text-slate-400">[다른 브라우저로 열기]를 선택하고, 다시 메뉴를 열어 [데스크톱 사이트]를 체크합니다.</p>
+                  <div class="grid grid-cols-2 gap-3">
+                    <img src="3604.jpg" alt="사진3" class="rounded-lg w-full h-auto object-contain border border-slate-800 bg-black/30">
+                    <img src="3606.jpg" alt="사진4" class="rounded-lg w-full h-auto object-contain border border-slate-800 bg-black/30">
+                  </div>
+                </div>
               </div>
 
-              <div class="flex items-center justify-between bg-slate-900/80 p-2.5 rounded-lg border border-slate-800">
-                <span>5. [Choose Photo/Video] 선택 후 파일 선택</span>
-                <button onclick="toggleStep('step11')" class="bg-indigo-600/30 text-indigo-300 px-2 py-1 rounded font-bold">i</button>
-              </div>
-              <div id="detail-step11" class="hidden pl-2 border-l-2 border-indigo-500">
-                <img src="Screenshot_20260802_201834_IntentResolver.jpg" onerror="this.src='Screenshot_20260802_201834.jpg'" class="rounded-lg w-48 border border-slate-800">
-              </div>
-
-              <div class="flex items-center justify-between bg-slate-900/80 p-2.5 rounded-lg border border-slate-800">
-                <span>6. 비공개 설정 유지</span>
-                <button onclick="toggleStep('step14')" class="bg-indigo-600/30 text-indigo-300 px-2 py-1 rounded font-bold">i</button>
-              </div>
-              <div id="detail-step14" class="hidden pl-2 border-l-2 border-indigo-500">
-                <img src="Screenshot_20260802_201926_Samsung Browser.jpg" onerror="this.src='Screenshot_20260802_201926.jpg'" class="rounded-lg w-48 border border-slate-800">
+              <div class="flex flex-col bg-slate-900/80 p-3 rounded-xl border border-slate-800">
+                <div class="flex items-center justify-between">
+                  <span class="font-medium text-slate-200">3. 구글 계정으로 로그인 후 업로드 버튼 누르기</span>
+                  <button onclick="toggleStep('step6')" class="bg-indigo-600/30 hover:bg-indigo-600/50 text-indigo-300 px-3 py-1.5 rounded-lg font-bold transition ml-2 flex-shrink-0">i</button>
+                </div>
+                <div id="detail-step6" class="hidden mt-3 pt-3 border-t border-slate-800/50 space-y-3">
+                  <p class="text-slate-400">우측 상단을 눌러 구글 계정으로 로그인한 뒤, 좌측 상단의 초록색 네모(업로드) 버튼을 누릅니다.</p>
+                  <div class="grid grid-cols-2 gap-3">
+                    <img src="3607.jpg" alt="사진5" class="rounded-lg w-full h-auto object-contain border border-slate-800 bg-black/30">
+                    <img src="3608.jpg" alt="사진6" class="rounded-lg w-full h-auto object-contain border border-slate-800 bg-black/30">
+                  </div>
+                </div>
               </div>
 
-              <div class="flex items-center justify-between bg-slate-900/80 p-2.5 rounded-lg border border-slate-800">
-                <span>7. 사진 꾹 누르고 [이미지 보기] 후 주소 복사</span>
-                <button onclick="toggleStep('step15')" class="bg-indigo-600/30 text-indigo-300 px-2 py-1 rounded font-bold">i</button>
-              </div>
-              <div id="detail-step15" class="hidden pl-2 border-l-2 border-indigo-500">
-                <img src="Screenshot_20260802_201939_Samsung Browser.jpg" onerror="this.src='Screenshot_20260802_201939.jpg'" class="rounded-lg w-48 border border-slate-800">
+              <div class="flex flex-col bg-slate-900/80 p-3 rounded-xl border border-slate-800">
+                <div class="flex items-center justify-between">
+                  <span class="font-medium text-slate-200">4. 사진/비디오 선택 메뉴에서 '파일' 앱 열기</span>
+                  <button onclick="toggleStep('step7')" class="bg-indigo-600/30 hover:bg-indigo-600/50 text-indigo-300 px-3 py-1.5 rounded-lg font-bold transition ml-2 flex-shrink-0">i</button>
+                </div>
+                <div id="detail-step7" class="hidden mt-3 pt-3 border-t border-slate-800/50 space-y-3">
+                  <p class="text-slate-400">가운데 [Choose Photo/Video] 버튼을 누르고, 작업 선택 창에서 [파일]을 선택합니다.</p>
+                  <div class="grid grid-cols-2 gap-3">
+                    <img src="3609.jpg" alt="사진7" class="rounded-lg w-full h-auto object-contain border border-slate-800 bg-black/30">
+                    <img src="3610.jpg" alt="사진8" class="rounded-lg w-full h-auto object-contain border border-slate-800 bg-black/30">
+                  </div>
+                </div>
               </div>
 
-              <!-- 14번 이미지 (요청하신 파일명) -->
-              <div class="flex items-center justify-between bg-slate-900/80 p-2.5 rounded-lg border border-slate-800">
-                <span>14. 복사한 링크를 붙여넣고 [등록하기]를 누릅니다.</span>
-                <button onclick="toggleStep('step17')" class="bg-indigo-600/30 hover:bg-indigo-600/50 text-indigo-300 px-2 py-1 rounded font-bold">i</button>
+              <div class="flex flex-col bg-slate-900/80 p-3 rounded-xl border border-slate-800">
+                <div class="flex items-center justify-between">
+                  <span class="font-medium text-slate-200">5. 갤러리에서 사진 고르고 설정은 그대로 두기</span>
+                  <button onclick="toggleStep('step8')" class="bg-indigo-600/30 hover:bg-indigo-600/50 text-indigo-300 px-3 py-1.5 rounded-lg font-bold transition ml-2 flex-shrink-0">i</button>
+                </div>
+                <div id="detail-step8" class="hidden mt-3 pt-3 border-t border-slate-800/50 space-y-3">
+                  <p class="text-slate-400">[갤러리] 메뉴에서 업로드할 사진을 고릅니다. 이후 비공개(Hidden) 설정은 건드리지 말고 가만히 둡니다.</p>
+                  <div class="grid grid-cols-2 gap-3">
+                    <img src="3611.jpg" alt="사진9" class="rounded-lg w-full h-auto object-contain border border-slate-800 bg-black/30">
+                    <img src="3612.jpg" alt="사진10" class="rounded-lg w-full h-auto object-contain border border-slate-800 bg-black/30">
+                  </div>
+                </div>
               </div>
-              <div id="detail-step17" class="hidden pl-2 border-l-2 border-indigo-500">
-                <img src="2847_2.jpg" alt="14번 사진" class="rounded-lg w-full max-w-[16rem] border border-slate-800">
+
+              <div class="flex flex-col bg-slate-900/80 p-3 rounded-xl border border-slate-800">
+                <div class="flex items-center justify-between">
+                  <span class="font-medium text-slate-200">6. 사진을 꾹 눌러 '이미지 보기' 선택하기</span>
+                  <button onclick="toggleStep('step9')" class="bg-indigo-600/30 hover:bg-indigo-600/50 text-indigo-300 px-3 py-1.5 rounded-lg font-bold transition ml-2 flex-shrink-0">i</button>
+                </div>
+                <div id="detail-step9" class="hidden mt-3 pt-3 border-t border-slate-800/50 space-y-3">
+                  <p class="text-slate-400">업로드된 사진을 손가락으로 길게 꾹 누르고 [이미지 보기]를 누른 뒤, 화면 맨 위 주소창을 확인합니다.</p>
+                  <div class="grid grid-cols-2 gap-3">
+                    <img src="3613.jpg" alt="사진11" class="rounded-lg w-full h-auto object-contain border border-slate-800 bg-black/30">
+                    <img src="3614.jpg" alt="사진12" class="rounded-lg w-full h-auto object-contain border border-slate-800 bg-black/30">
+                  </div>
+                </div>
+              </div>
+
+              <div class="flex flex-col bg-slate-900/80 p-3 rounded-xl border border-slate-800">
+                <div class="flex items-center justify-between">
+                  <span class="font-medium text-slate-200">7. 이미지 주소 복사하여 갤러리에 등록하기</span>
+                  <button onclick="toggleStep('step10')" class="bg-indigo-600/30 hover:bg-indigo-600/50 text-indigo-300 px-3 py-1.5 rounded-lg font-bold transition ml-2 flex-shrink-0">i</button>
+                </div>
+                <div id="detail-step10" class="hidden mt-3 pt-3 border-t border-slate-800/50 space-y-3">
+                  <p class="text-slate-400">주소창의 직접 링크(i.imgur.com/...)를 복사한 뒤, 웹사이트 링크 입력 칸에 붙여넣고 [등록하기]를 누릅니다.</p>
+                  <div class="grid grid-cols-2 gap-3">
+                    <img src="3615.jpg" alt="사진13" class="rounded-lg w-full h-auto object-contain border border-slate-800 bg-black/30">
+                    <img src="3588.jpg" alt="사진14" class="rounded-lg w-full h-auto object-contain border border-slate-800 bg-black/30">
+                  </div>
+                </div>
               </div>
 
             </div>
@@ -178,7 +210,6 @@
         </div>
       </div>
 
-      <!-- 업로드 입력 섹션 (스크린샷 디자인 적용) -->
       <section class="bg-slate-900/80 border border-slate-800 p-6 rounded-2xl shadow-xl space-y-4">
         <div class="flex flex-col gap-4">
           <h2 class="text-lg font-bold text-slate-200 flex items-center gap-2">
@@ -196,7 +227,7 @@
           
           <div class="space-y-3 pt-2">
             <input type="text" id="media-title" placeholder="제목을 입력하세요" class="w-full bg-[#0f172a] border border-slate-800 text-sm rounded-xl p-4 text-white focus:outline-none focus:border-indigo-500">
-            <input type="text" id="media-url" placeholder="https://i.imgur.com/..." class="w-full bg-[#0f172a] border border-slate-800 text-sm rounded-xl p-4 text-white focus:outline-none focus:border-indigo-500">
+            <input type="text" id="media-url" placeholder="유튜브 링크 또는 Imgur 직접 링크(https://i.imgur.com/...)" class="w-full bg-[#0f172a] border border-slate-800 text-sm rounded-xl p-4 text-white focus:outline-none focus:border-indigo-500">
             <button onclick="addMedia()" class="w-full bg-[#5b58f5] hover:bg-[#4f4cee] text-white text-[15px] font-bold px-6 py-4 rounded-xl transition shadow-lg mt-2">
               등록하기
             </button>
@@ -204,7 +235,6 @@
         </div>
       </section>
 
-      <!-- 분류 및 정렬 컨트롤 바 -->
       <section class="flex flex-col sm:flex-row justify-between items-center gap-4 bg-slate-900/40 p-4 rounded-2xl border border-slate-800">
         <div class="flex items-center gap-2 w-full sm:w-auto">
           <button onclick="setFilter('all')" id="filter-all" class="flex-1 sm:flex-none text-xs px-4 py-2 rounded-xl font-medium bg-indigo-600 text-white transition">전체 보기</button>
@@ -220,7 +250,6 @@
         </div>
       </section>
 
-      <!-- 미디어 갤러리 그리드 -->
       <section>
         <div id="gallery-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"></div>
       </section>
@@ -228,7 +257,6 @@
     </div>
   </main>
 
-  <!-- 모달창 -->
   <div id="image-modal" class="hidden fixed inset-0 z-50 bg-black/95 flex flex-col items-center justify-center p-4">
     <button onclick="closeModal()" class="absolute top-4 right-4 text-white bg-slate-800 hover:bg-slate-700 w-10 h-10 rounded-full flex items-center justify-center text-xl font-bold transition shadow-lg">✕</button>
     <div class="relative w-full max-w-4xl h-[75vh] flex items-center justify-center">
@@ -292,7 +320,7 @@
 
     function toggleAllGuide() {
       allGuideExpanded = !allGuideExpanded;
-      for (let i = 1; i <= 17; i++) {
+      for (let i = 1; i <= 10; i++) { // step1 ~ step10
         const detail = document.getElementById(`detail-step${i}`);
         if (detail) {
           if (allGuideExpanded) detail.classList.remove('hidden');
