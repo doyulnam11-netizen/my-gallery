@@ -1,14 +1,15 @@
 // ai/ai-handler.js
 
+// 제공해주신 Groq API 키
 const GROQ_API_KEY = "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";
 const GROQ_API_URL = "https://api.groq.com/openai/v1/chat/completions";
 
 /**
- * Groq AI 모델을 호출하여 텍스트 응답을 받아오는 함수
- * @param {string} prompt - AI에게 보낼 요청 메시지
- * @returns {Promise<string>} - AI의 답변 결과
+ * 미디어 제목을 분석하여 AI가 구체적인 해시태그를 생성하는 함수
+ * @param {string} title - 사용자가 입력한 미디어 제목
+ * @returns {Promise<string>} - AI가 추천하는 해시태그 문자열 (예: "#일상 #브이로그 #풍경")
  */
-async function requestAI(prompt) {
+async function generateHashtags(title) {
   try {
     const response = await fetch(GROQ_API_URL, {
       method: "POST",
@@ -21,38 +22,33 @@ async function requestAI(prompt) {
         messages: [
           {
             role: "system",
-            content: "당신은 프라이빗 갤러리의 친절하고 센스 있는 AI 매니저입니다. 사용자의 요청에 짧고 핵심만 담아 한국어로 답변해주세요."
+            content: `당신은 미디어(사진/영상) 분석 및 해시태그 생성 전문가입니다. 
+            사용자가 입력한 미디어의 제목이나 내용을 분석해 카테고리를 분류하고, 가장 구체적이고 잘 어울리는 해시태그 3~5개를 추천하세요. 
+            [조건]
+            1. 반드시 '#태그1 #태그2' 형식으로 띄어쓰기로 구분하여 출력할 것.
+            2. 다른 부연 설명이나 인사는 일절 하지 말 것.`
           },
           {
             role: "user",
-            content: prompt
+            content: `다음 미디어의 제목/내용을 분석해서 해시태그를 달아줘: "${title}"`
           }
         ],
         temperature: 0.7,
-        max_tokens: 300
+        max_tokens: 150
       })
     });
 
     if (!response.ok) {
-      throw new Error(`API 오류 발생: ${response.status}`);
+      throw new Error(`AI API 통신 오류 발생: ${response.status}`);
     }
 
     const data = await response.json();
     if (data.choices && data.choices.length > 0) {
       return data.choices[0].message.content.trim();
     }
-    return "AI로부터 유효한 응답을 받지 못했습니다.";
+    return "";
   } catch (error) {
-    console.error("Groq API 통신 실패:", error);
-    return "AI 연결 중 오류가 발생했습니다.";
+    console.error("Groq API 통신 실패 (해시태그 생성 불가):", error);
+    return "";
   }
-}
-
-/**
- * 등록된 미디어 제목을 기반으로 AI 추천 코멘트나 감상평을 생성하는 예시 함수
- * @param {string} title - 미디어 제목
- */
-async function generateMediaComment(title) {
-  const prompt = `다음 미디어 제목에 어울리는 센스 있고 재밌는 한 줄 코멘트나 감상평을 만들어줘: "${title}"`;
-  return await requestAI(prompt);
 }
